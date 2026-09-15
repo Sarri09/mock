@@ -1,0 +1,282 @@
+[
+  {
+    "id": 1,
+    "category": "logic",
+    "question": "LÁPIZ es a ESCRIBIR como BISTURÍ es a...",
+    "options": ["Médico", "Cortar", "Hospital", "Sangre"],
+    "correct_answer": 1,
+    "explanation": "El bisturí es la herramienta cuyo propósito es cortar, así como el lápiz es para escribir."
+  },
+  {
+    "id": 2,
+    "category": "math",
+    "question": "Un monitor de computadora cuesta $80. Si hoy tiene un 25% de descuento, ¿cuál es el precio final?",
+    "options": ["$20", "$60", "$75", "$100"],
+    "correct_answer": 1,
+    "explanation": "El 25% de 80 es 20. 80 - 20 = 60."
+  },
+  {
+    "id": 3,
+    "category": "logic",
+    "question": "Si el día de ayer fue lunes, ¿qué día de la semana será tres días después de mañana?",
+    "options": ["Jueves", "Viernes", "Sábado", "Domingo"],
+    "correct_answer": 2,
+    "explanation": "Ayer fue lunes -> Hoy es martes -> Mañana es miércoles. Tres días después del miércoles es sábado."
+  },
+  {
+    "id": 4,
+    "category": "sequences",
+    "question": "¿Qué número continúa la siguiente serie matemática? 8, 16, 12, 24, 20, 40, ___",
+    "options": ["36", "44", "80", "42"],
+    "correct_answer": 0,
+    "explanation": "El patrón es x2, -4. 40 - 4 = 36."
+  },
+  {
+    "id": 5,
+    "category": "proportions",
+    "question": "Un tren viaja a 60 kilómetros por hora. ¿Cuántos minutos tardará en recorrer 15 kilómetros?",
+    "options": ["10 minutos", "15 minutos", "20 minutos", "30 minutos"],
+    "correct_answer": 1,
+    "explanation": "A 60 km/h, avanza 1 km por minuto. 15 km toman 15 minutos."
+  },
+  {
+    "id": 6,
+    "category": "sequences",
+    "question": "¿Qué número continúa la serie? 3, 4, 7, 12, 19, ___",
+    "options": ["24", "26", "28", "31"],
+    "correct_answer": 2,
+    "explanation": "La diferencia entre los números aumenta en impares consecutivos: +1, +3, +5, +7, +9. 19 + 9 = 28."
+  },
+  {
+    "id": 7,
+    "category": "logic",
+    "question": "Si tres días antes de ayer fue martes, ¿qué día de la semana será mañana?",
+    "options": ["Sábado", "Domingo", "Lunes", "Martes"],
+    "correct_answer": 1,
+    "explanation": "Tres días antes de ayer = martes. Ayer = viernes. Hoy = sábado. Mañana = domingo."
+  },
+  {
+    "id": 8,
+    "category": "math",
+    "question": "Si 4 pizzas familiares cuestan $60 en total, ¿cuánto costarán 7 pizzas iguales manteniendo el mismo precio unitario?",
+    "options": ["$90", "$100", "$105", "$115"],
+    "correct_answer": 2,
+    "explanation": "Cada pizza cuesta $15 (60/4). 7 pizzas cuestan 7 x 15 = $105."
+  },
+  {
+    "id": 9,
+    "category": "vocabulary",
+    "question": "Las palabras 'EFÍMERO' y 'PERMANENTE' tienen significados que son:",
+    "options": ["Similares", "Opuestos", "Ni similares ni opuestos", "Idénticos"],
+    "correct_answer": 1,
+    "explanation": "Efímero significa que dura muy poco tiempo, por lo que es el antónimo directo de permanente."
+  },
+  {
+    "id": 10,
+    "category": "sequences",
+    "question": "¿Qué número continúa la serie? 5, 10, 8, 16, 14, 28, ___",
+    "options": ["24", "26", "30", "56"],
+    "correct_answer": 1,
+    "explanation": "El patrón alterna entre multiplicar por 2 y restar 2. 28 - 2 = 26."
+  },
+  {
+    "id": 11,
+    "category": "logic",
+    "question": "Ningún ave tiene escamas. Algunos animales en el zoológico tienen escamas. Por lo tanto, algunos animales en el zoológico no son aves.",
+    "options": ["Verdadero", "Falso", "No se puede determinar"],
+    "correct_answer": 0,
+    "explanation": "Si tener escamas excluye ser ave, los animales con escamas del zoológico definitivamente no son aves."
+  },
+  {
+    "id": 12,
+    "category": "proportions",
+    "question": "Un técnico tarda 15 minutos en instalar una tarjeta. Trabajando a ese ritmo de forma continua durante 2 horas y media, ¿cuántas instalará?",
+    "options": ["8", "10", "12", "15"],
+    "correct_answer": 1,
+    "explanation": "2 horas y media son 150 minutos. 150 / 15 = 10 instalaciones."
+  },
+  {
+    "id": 13,
+    "category": "vocabulary",
+    "question": "MÉDICO es a PACIENTE como ABOGADO es a...",
+    "options": ["Juez", "Tribunal", "Cliente", "Ley"],
+    "correct_answer": 2,
+    "explanation": "El médico provee un servicio profesional a su paciente, así como el abogado provee un servicio a su cliente."
+  },
+  {
+    "id": 14,
+    "category": "math",
+    "question": "Una tienda compra un artículo por $40 y lo vende con un margen de ganancia del 50%. Durante una venta especial, aplican un 20% de descuento al precio de venta. ¿Cuál es el precio final?",
+    "options": ["$48", "$50", "$52", "$60"],
+    "correct_answer": 0,
+    "explanation": "El precio de venta inicial es $60 ($40 + 50%). El 20% de descuento sobre $60 es $12. 60 - 12 = $48."
+  },
+  {
+    "id": 15,
+    "category": "sequences",
+    "question": "¿Qué número continúa la serie? 120, 60, 20, 5, ___",
+    "options": ["0", "1", "2", "2.5"],
+    "correct_answer": 1,
+    "explanation": "El divisor va aumentando: /2, /3, /4, /5. 5 / 5 = 1."
+  },
+  {
+    "id": 16,
+    "category": "vocabulary",
+    "question": "Las palabras 'ILUSTRE' y 'CÉLEBRE' tienen significados que son:",
+    "options": ["Similares", "Opuestos", "Ni similares ni opuestos"],
+    "correct_answer": 0,
+    "explanation": "Ambas palabras se refieren a alguien o algo que es muy famoso, reconocido o distinguido."
+  },
+  {
+    "id": 17,
+    "category": "math",
+    "question": "Si 8 servidores tardan 6 horas en procesar una base de datos, ¿cuántas horas tardarán 12 servidores trabajando a la misma capacidad?",
+    "options": ["2 horas", "3 horas", "4 horas", "9 horas"],
+    "correct_answer": 2,
+    "explanation": "Es proporción inversa. 8 x 6 = 48 'horas-servidor' de trabajo total. 48 / 12 servidores = 4 horas."
+  },
+  {
+    "id": 18,
+    "category": "sequences",
+    "question": "¿Qué número continúa la serie? 2, 6, 12, 20, 30, ___",
+    "options": ["38", "40", "42", "44"],
+    "correct_answer": 2,
+    "explanation": "La diferencia entre los números aumenta de dos en dos: +4, +6, +8, +10. El siguiente es +12. 30 + 12 = 42."
+  },
+  {
+    "id": 19,
+    "category": "logic",
+    "question": "Asume que los dos primeros enunciados son verdaderos: 1) María es más alta que Juana. 2) Juana es más baja que Alicia. ¿El tercer enunciado 'María es más alta que Alicia' es verdadero, falso o no se puede determinar?",
+    "options": ["Verdadero", "Falso", "No se puede determinar"],
+    "correct_answer": 2,
+    "explanation": "Sabemos que ambas son más altas que Juana, pero no hay información para comparar la altura entre María y Alicia."
+  },
+  {
+    "id": 20,
+    "category": "math",
+    "question": "Un artículo cuesta $200. Se le aplica un descuento del 10% y luego, al nuevo precio, se le agrega un 10% de impuesto. ¿Cuál es el precio final?",
+    "options": ["$198", "$200", "$202", "$210"],
+    "correct_answer": 0,
+    "explanation": "El descuento baja el precio a $180. El 10% de impuesto sobre $180 es $18. 180 + 18 = $198."
+  },
+  {
+    "id": 21,
+    "category": "vocabulary",
+    "question": "Las palabras 'CONVERGENTE' y 'DIVERGENTE' tienen significados que son:",
+    "options": ["Similares", "Opuestos", "Ni similares ni opuestos"],
+    "correct_answer": 1,
+    "explanation": "Convergente significa unirse en un punto. Divergente significa separarse desde un punto. Son antónimos."
+  },
+  {
+    "id": 22,
+    "category": "sequences",
+    "question": "¿Qué número continúa la serie? 1, 4, 9, 16, 25, ___",
+    "options": ["30", "32", "36", "40"],
+    "correct_answer": 2,
+    "explanation": "Son los cuadrados perfectos de los números naturales: 1², 2², 3², 4², 5², 6² (36)."
+  },
+  {
+    "id": 23,
+    "category": "proportions",
+    "question": "Una receta requiere 2 tazas de harina para hacer 3 porciones. ¿Cuántas tazas se necesitan para hacer 15 porciones?",
+    "options": ["6", "8", "10", "12"],
+    "correct_answer": 2,
+    "explanation": "15 porciones es 5 veces la receta original (15/3). Por lo tanto, necesitas 5 x 2 = 10 tazas."
+  },
+  {
+    "id": 24,
+    "category": "logic",
+    "question": "Si el día pasado mañana es viernes, ¿qué día fue ayer?",
+    "options": ["Lunes", "Martes", "Miércoles", "Jueves"],
+    "correct_answer": 1,
+    "explanation": "Si pasado mañana es viernes, hoy es miércoles. Por lo tanto, ayer fue martes."
+  },
+  {
+    "id": 25,
+    "category": "math",
+    "question": "¿Cuánto es la mitad de la cuarta parte de 400?",
+    "options": ["25", "50", "100", "200"],
+    "correct_answer": 1,
+    "explanation": "La cuarta parte de 400 es 100. La mitad de 100 es 50."
+  },
+  {
+    "id": 26,
+    "category": "sequences",
+    "question": "¿Qué número continúa la serie? 100, 95, 85, 70, 50, ___",
+    "options": ["20", "25", "30", "35"],
+    "correct_answer": 1,
+    "explanation": "La resta se va incrementando de 5 en 5: -5, -10, -15, -20. La siguiente es -25. 50 - 25 = 25."
+  },
+  {
+    "id": 27,
+    "category": "vocabulary",
+    "question": "¿Cuál de las siguientes palabras es la 'intrusa'?",
+    "options": ["Caminar", "Correr", "Saltar", "Dormir"],
+    "correct_answer": 3,
+    "explanation": "Dormir implica reposo absoluto, mientras que las otras tres implican acción física y movimiento activo."
+  },
+  {
+    "id": 28,
+    "category": "logic",
+    "question": "Todos los desarrolladores saben programar. Carlos sabe programar. Por lo tanto, Carlos es un desarrollador.",
+    "options": ["Verdadero", "Falso", "No se puede determinar"],
+    "correct_answer": 2,
+    "explanation": "Es un error lógico (afirmación del consecuente). Que sepa programar no lo hace obligatoriamente desarrollador, podría ser un hobbyista."
+  },
+  {
+    "id": 29,
+    "category": "math",
+    "question": "Si 3 trabajadores empacan 3 cajas en 3 minutos. ¿Cuántos trabajadores se necesitan para empacar 30 cajas en 30 minutos?",
+    "options": ["3", "10", "30", "90"],
+    "correct_answer": 0,
+    "explanation": "La tasa es 1 trabajador = 1 caja = 3 minutos. En 30 minutos, 1 trabajador empaca 10 cajas. Para 30 cajas, necesitas 3 trabajadores."
+  },
+  {
+    "id": 30,
+    "category": "sequences",
+    "question": "¿Qué número continúa la serie? 2, 4, 8, 16, 32, ___",
+    "options": ["48", "56", "64", "128"],
+    "correct_answer": 2,
+    "explanation": "Cada número se multiplica por 2 (potencias de 2). 32 x 2 = 64."
+  },
+  {
+    "id": 31,
+    "category": "logic",
+    "question": "Una cuerda de 10 metros se corta en partes. Cada corte toma 1 minuto. ¿Cuántos minutos tomará cortar la cuerda entera en trozos de 1 metro?",
+    "options": ["9", "10", "11", "12"],
+    "correct_answer": 0,
+    "explanation": "Para obtener 10 trozos de 1 metro, solo necesitas hacer 9 cortes (el último corte deja dos trozos de 1 metro)."
+  },
+  {
+    "id": 32,
+    "category": "proportions",
+    "question": "Si recorres la mitad de un trayecto a 40 km/h y la otra mitad a 60 km/h, tu velocidad promedio es:",
+    "options": ["Menor a 50 km/h", "Exactamente 50 km/h", "Mayor a 50 km/h"],
+    "correct_answer": 0,
+    "explanation": "Pasas más tiempo viajando a 40 km/h que a 60 km/h (porque tardas más en cubrir la misma distancia). El promedio armónico da 48 km/h."
+  },
+  {
+    "id": 33,
+    "category": "vocabulary",
+    "question": "Las palabras 'AMBIGUO' e 'INQUIETO' tienen significados que son:",
+    "options": ["Similares", "Opuestos", "Ni similares ni opuestos"],
+    "correct_answer": 2,
+    "explanation": "Ambiguo significa que tiene más de un sentido o es incierto. Inquieto se refiere a la falta de calma. No tienen relación."
+  },
+  {
+    "id": 34,
+    "category": "math",
+    "question": "Un inversor compra acciones por $5,000. El primer año pierden el 20% de su valor. El segundo año, el nuevo valor aumenta un 25%. ¿Cuál es el valor actual?",
+    "options": ["$4,000", "$4,800", "$5,000", "$5,250"],
+    "correct_answer": 2,
+    "explanation": "El 20% menos de $5000 es $4000. El 25% de aumento sobre $4000 es $1000. 4000 + 1000 = $5000."
+  },
+  {
+    "id": 35,
+    "category": "sequences",
+    "question": "¿Qué número continúa la serie? 9, 10, 8, 11, 7, ___",
+    "options": ["5", "6", "12", "13"],
+    "correct_answer": 2,
+    "explanation": "Son dos series alternadas o un patrón de +1, -2, +3, -4, +5. 7 + 5 = 12."
+  }
+]
