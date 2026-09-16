@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAssessment } from './useAssessment';
 import questionsData from './questions.json'; 
-import { BrainCircuit, Play, Clock, ChevronRight, ChevronLeft, CheckCircle2, XCircle, RotateCcw, Target, BarChart3, Home, Trophy, Activity, Eye, X } from 'lucide-react';
+import { BrainCircuit, Play, Clock, ChevronRight, ChevronLeft, CheckCircle2, XCircle, RotateCcw, Target, BarChart3, Home, Trophy, Activity, Eye, X, AlertTriangle, Lightbulb } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 function App() {
@@ -12,10 +12,8 @@ function App() {
   } = useAssessment(questionsData);
 
   const [history, setHistory] = useState([]);
-  const [currentView, setCurrentView] = useState('home'); // 'home' o 'dashboard'
+  const [currentView, setCurrentView] = useState('home');
   const [selectedRecord, setSelectedRecord] = useState(null);
-  
-  // NUEVO: Estado para saber si estamos en práctica o simulacro real
   const [testMode, setTestMode] = useState('practice'); 
 
   useEffect(() => {
@@ -51,7 +49,7 @@ function App() {
         total: questions.length,
         percentage: Math.round((score / questions.length) * 100),
         timeSpent: formatTime(timeSpentSeconds),
-        mode: testMode, // Guardamos el modo del test (practice o real)
+        mode: testMode, 
         testQuestions: questions,
         userAnswers: answers
       };
@@ -104,14 +102,12 @@ function App() {
     );
   }
 
-  // VISTA 2: DASHBOARD Y METRICAS DIVIDIDAS
+  // VISTA 2: DASHBOARD Y METRICAS CON DESGLOSE POR CATEGORIA
   if (!isActive && !isFinished && currentView === 'dashboard') {
     
-    // Separar los datos para las gráficas
     const practiceHistory = history.filter(h => h.mode === 'practice');
     const realHistory = history.filter(h => h.mode === 'real');
 
-    // Función auxiliar para formatear datos de Recharts
     const formatChartData = (data) => {
       return [...data].reverse().map((h, i) => ({
         name: `T${i + 1}`,
@@ -119,10 +115,44 @@ function App() {
       }));
     };
 
+    // FUNCIÓN CLAVE: Calcula aciertos por categoría en base al historial filtrado
+    const calculateCategoryStats = (data) => {
+      const stats = {};
+      
+      data.forEach(record => {
+        if (!record.testQuestions || !record.userAnswers) return;
+        
+        record.testQuestions.forEach(q => {
+          const cat = q.category || 'general';
+          if (!stats[cat]) {
+            stats[cat] = { correct: 0, total: 0 };
+          }
+          stats[cat].total += 1;
+          if (record.userAnswers[q.id] === q.correct_answer) {
+            stats[cat].correct += 1;
+          }
+        });
+      });
+
+      // Convertir a array con porcentajes
+      return Object.keys(stats).map(cat => {
+        const item = stats[cat];
+        const percentage = item.total > 0 ? Math.round((item.correct / item.total) * 100) : 0;
+        return { category: cat, percentage, total: item.total };
+      });
+    };
+
     const MetricsPanel = ({ title, data, colorClass, isReal }) => {
       const avg = data.length > 0 ? Math.round(data.reduce((acc, curr) => acc + curr.percentage, 0) / data.length) : 0;
       const best = data.length > 0 ? Math.max(...data.map(h => h.percentage)) : 0;
       const chartData = formatChartData(data);
+      const categoryStats = calculateCategoryStats(data);
+
+      // Encontrar la categoría más baja para la sugerencia
+      let weakestCategory = null;
+      if (categoryStats.length > 0) {
+        weakestCategory = [...categoryStats].sort((a, b) => a.percentage - b.percentage)[0];
+      }
 
       return (
         <div className={`bg-white p-6 rounded-3xl shadow-sm border-2 ${isReal ? 'border-rose-100' : 'border-indigo-100'} flex flex-col gap-6`}>
@@ -142,7 +172,45 @@ function App() {
             </div>
           </div>
 
-          <div className="h-48 w-full mt-2">
+          {/* DESGLOSE POR TIPO DE PREGUNTA */}
+          <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+            <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Rendimiento por Categoría</h4>
+            {categoryStats.length === 0 ? (
+              <p className="text-xs text-slate-400 italic">Sin datos detallados aún.</p>
+            ) : (
+              <div className="flex flex-col gap-3">
+                {categoryStats.map(stat => (
+                  <div key={stat.category}>
+                    <div className="flex justify-between text-xs font-bold text-slate-600 mb-1 capitalize">
+                      <span>{stat.category}</span>
+                      <span>{stat.percentage}%</span>
+                    </div>
+                    <div className="w-full bg-slate-200 rounded-full h-2">
+                      <div 
+                        className={`h-2 rounded-full transition-all duration-500 ${stat.percentage >= 70 ? 'bg-emerald-500' : stat.percentage >= 40 ? 'bg-amber-500' : 'bg-rose-500'}`} 
+                        style={{ width: `${stat.percentage}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* SUGERENCIA INTELIGENTE DE MEJORA */}
+          {weakestCategory && (
+            <div className="bg-amber-50 border border-amber-200 p-4 rounded-2xl flex items-start gap-3">
+              <Lightbulb className="text-amber-500 shrink-0 mt-0.5" size={20} />
+              <div>
+                <p className="text-xs font-bold text-amber-800 uppercase tracking-wider">Sugerencia de Mejora</p>
+                <p className="text-xs text-amber-700 mt-1">
+                  Tu área más baja en este modo es <span className="font-bold uppercase">"{weakestCategory.category}"</span> ({weakestCategory.percentage}% de acierto). Te sugiero enfocar tus siguientes repasos en esta categoría para balancear tu puntaje.
+                </p>
+              </div>
+            </div>
+          )}
+
+          <div className="h-44 w-full mt-2">
             {data.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={chartData} margin={{ top: 5, right: 10, bottom: 0, left: -20 }}>
@@ -164,7 +232,7 @@ function App() {
     return (
       <div className="min-h-screen bg-slate-50 p-6 md:p-12 font-sans relative">
         
-        {/* MODAL DE DETALLES (Permanece igual) */}
+        {/* MODAL DE DETALLES */}
         {selectedRecord && (
           <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
             <div className="bg-white rounded-3xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
@@ -237,7 +305,7 @@ function App() {
             </div>
           ) : (
             <>
-              {/* PANALES DIVIDIDOS */}
+              {/* PANALES DIVIDIDOS CON DESGLOSE Y SUGERENCIA */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
                 <MetricsPanel 
                   title="Modo Práctica (5 Qs)" 
@@ -317,7 +385,7 @@ function App() {
     );
   }
 
-  // VISTA 3: RESULTADOS DEL TEST (Permanece igual)
+  // VISTA 3: RESULTADOS DEL TEST
   if (isFinished) {
     const score = calculateScore();
     const percentage = Math.round((score / questions.length) * 100);
@@ -376,7 +444,7 @@ function App() {
     );
   }
 
-  // VISTA 4: EVALUACIÓN (Permanece igual)
+  // VISTA 4: EVALUACIÓN
   return (
     <div className="min-h-screen bg-slate-50 p-4 pt-8 md:pt-12 font-sans flex justify-center">
       <div className="max-w-3xl w-full bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 flex flex-col">
