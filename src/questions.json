@@ -278,5 +278,125 @@
     "options": ["5", "6", "12", "13"],
     "correct_answer": 2,
     "explanation": "Son dos series alternadas o un patrón de +1, -2, +3, -4, +5. 7 + 5 = 12."
+  },
+  {
+    "id": 36,
+    "category": "logic",
+    "question": "Si el día de mañana de ayer es jueves, ¿qué día será pasado mañana?",
+    "options": ["Viernes", "Sábado", "Domingo", "Lunes"],
+    "correct_answer": 1,
+    "explanation": "El mañana de ayer es hoy. Si hoy es jueves, pasado mañana es sábado."
+  },
+  {
+    "id": 37,
+    "category": "vocabulary",
+    "question": "Las palabras 'NEGLIGENTE' y 'CUIDADOSO' tienen significados que son:",
+    "options": ["Similares", "Opuestos", "Ni similares ni opuestos"],
+    "correct_answer": 1,
+    "explanation": "Negligente implica falta de cuidado o atención, siendo el antónimo directo de cuidadoso."
+  },
+  {
+    "id": 38,
+    "category": "math",
+    "question": "¿Cuánto es el 30% del 50% de 200?",
+    "options": ["15", "30", "50", "60"],
+    "correct_answer": 1,
+    "explanation": "El 50% de 200 es 100. El 30% de 100 es 30."
+  },
+  {
+    "id": 39,
+    "category": "sequences",
+    "question": "¿Qué número continúa la serie? 100, 50, 200, 100, 400, ___",
+    "options": ["100", "200", "400", "800"],
+    "correct_answer": 1,
+    "explanation": "El patrón alterna entre dividir por 2 y multiplicar por 4. 400 / 2 = 200."
+  },
+  {
+    "id": 40,
+    "category": "proportions",
+    "question": "Si 5 desarrolladores construyen una aplicación en 10 días, ¿cuántos días tardarán 10 desarrolladores trabajando al mismo ritmo?",
+    "options": ["2.5", "5", "10", "20"],
+    "correct_answer": 1,
+    "explanation": "Es proporción inversa. El doble de personas (10) tomará la mitad del tiempo (5 días)."
+  },
+  {
+    "id": 41,
+    "category": "logic",
+    "question": "Todas las bases de datos usan SQL. MongoDB es una base de datos. Por lo tanto, MongoDB usa SQL.",
+    "options": ["Verdadero", "Falso", "No se puede determinar"],
+    "correct_answer": 0,
+    "explanation": "Lógicamente, según las premisas dadas (aunque en el mundo real sea falso), la conclusión es verdadera."
+  },
+  {
+    "id": 42,
+    "category": "vocabulary",
+    "question": "Las palabras 'INHERENTE' y 'EXTRÍNSECO' tienen significados que son:",
+    "options": ["Similares", "Opuestos", "Ni similares ni opuestos"],
+    "correct_answer": 1,
+    "explanation": "Inherente significa que es parte esencial e interna. Extrínseco significa que es externo o adquirido."
+  },
+  {
+    "id": 43,
+    "category": "math",
+    "question": "El precio original de una licencia de software es de $150. Si se aplica un descuento del 20%, ¿cuánto se debe pagar?",
+    "options": ["$100", "$120", "$130", "$140"],
+    "correct_answer": 1,
+    "explanation": "El 20% de 150 es 30. 150 - 30 = $120."
+  },
+  {
+    "id": 44,
+    "category": "sequences",
+    "question": "¿Qué número continúa la serie? 2, 3, 5, 8, 12, ___",
+    "options": ["15", "16", "17", "18"],
+    "correct_answer": 2,
+    "explanation": "La diferencia aumenta en 1 en cada paso: +1, +2, +3, +4. El siguiente es +5. 12 + 5 = 17."
+  },
+  {
+    "id": 45,
+    "category": "logic",
+    "question": "Una reunión estaba programada para el miércoles, pero se pospuso 4 días. ¿Qué día se realizará?",
+    "options": ["Sábado", "Domingo", "Lunes", "Martes"],
+    "correct_answer": 1,
+    "explanation": "Miércoles + 1 (jueves) + 2 (viernes) + 3 (sábado) + 4 = Domingo."
+  },
+  {
+    "id": 46,
+    "category": "proportions",
+    "question": "Un vehículo viaja a una velocidad constante de 80 km/h. ¿Qué distancia recorrerá en 45 minutos?",
+    "options": ["45 km", "50 km", "60 km", "80 km"],
+    "correct_answer": 2,
+    "explanation": "45 minutos son 3/4 de hora. 80 * (3/4) = 60 km."
+  },
+  {
+    "id": 47,
+    "category": "vocabulary",
+    "question": "Las palabras 'PRÓDIGO' y 'DERROCHADOR' tienen significados que son:",
+    "options": ["Similares", "Opuestos", "Ni similares ni opuestos"],
+    "correct_answer": 0,
+    "explanation": "Ambas palabras describen a alguien que gasta dinero o recursos sin medida."
+  },
+  {
+    "id": 48,
+    "category": "math",
+    "question": "¿Cuánto es la cuarta parte de la mitad de 800?",
+    "options": ["50", "100", "200", "400"],
+    "correct_answer": 1,
+    "explanation": "La mitad de 800 es 400. La cuarta parte de 400 es 100."
+  },
+  {
+    "id": 49,
+    "category": "sequences",
+    "question": "¿Qué número continúa la serie? 1/2, 1, 2, 4, 8, ___",
+    "options": ["10", "12", "14", "16"],
+    "correct_answer": 3,
+    "explanation": "Cada número se multiplica por 2. 8 x 2 = 16."
+  },
+  {
+    "id": 50,
+    "category": "logic",
+    "question": "Andrés es mayor que Carlos. Luis es menor que Carlos. ¿Quién es el más joven?",
+    "options": ["Andrés", "Carlos", "Luis", "No se puede determinar"],
+    "correct_answer": 2,
+    "explanation": "Si Andrés > Carlos, y Carlos > Luis, entonces Luis es el más joven."
   }
 ]

@@ -9,26 +9,29 @@ const shuffleArray = (array) => {
   return shuffled;
 };
 
-export const useAssessment = (allQuestions, questionsPerTest = 50, initialTime = 720) => {
+// Quitamos los valores fijos de aquí
+export const useAssessment = (allQuestions) => {
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(initialTime); 
+  const [timeLeft, setTimeLeft] = useState(0); 
   const [isActive, setIsActive] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
   const [answers, setAnswers] = useState({});
+  const [totalTimeLimit, setTotalTimeLimit] = useState(0); // Para guardar el tiempo inicial
 
-  const startTest = useCallback(() => {
-    // Para probar, si tenemos menos preguntas en el JSON que el máximo, usamos las que hay
-    const limit = Math.min(allQuestions.length, questionsPerTest);
-    const selectedQuestions = shuffleArray(allQuestions).slice(0, limit);
+  // Ahora startTest recibe los parámetros de modo
+  const startTest = useCallback((limit, time) => {
+    const actualLimit = Math.min(allQuestions.length, limit);
+    const selectedQuestions = shuffleArray(allQuestions).slice(0, actualLimit);
     
     setQuestions(selectedQuestions);
     setCurrentIndex(0);
-    setTimeLeft(initialTime);
+    setTimeLeft(time);
+    setTotalTimeLimit(time);
     setAnswers({});
     setIsActive(true);
     setIsFinished(false);
-  }, [allQuestions, questionsPerTest, initialTime]);
+  }, [allQuestions]);
 
   useEffect(() => {
     let timer = null;
@@ -63,6 +66,7 @@ export const useAssessment = (allQuestions, questionsPerTest = 50, initialTime =
     currentQuestion: questions[currentIndex],
     currentIndex,
     timeLeft,
+    totalTimeLimit, // Expuesto para calcular el sobrante
     isActive,
     isFinished,
     answers,

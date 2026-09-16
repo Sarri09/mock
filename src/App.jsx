@@ -8,11 +8,12 @@ const MAX_QUESTIONS = 5; // Cambiar a 50 para el test real
 const TIME_LIMIT = 120;  // Cambiar a 720 (12 minutos)
 
 function App() {
-  const {
-    questions, currentQuestion, currentIndex, timeLeft, isActive,
+  
+const {
+    questions, currentQuestion, currentIndex, timeLeft, totalTimeLimit, isActive,
     isFinished, answers, startTest, handleAnswer, nextQuestion,
     prevQuestion, finishTest
-  } = useAssessment(questionsData, MAX_QUESTIONS, TIME_LIMIT);
+  } = useAssessment(questionsData);
 
   const [history, setHistory] = useState([]);
   const [currentView, setCurrentView] = useState('home'); // 'home' o 'dashboard'
@@ -42,7 +43,7 @@ function App() {
   useEffect(() => {
     if (isFinished) {
       const score = calculateScore();
-      const timeSpentSeconds = TIME_LIMIT - timeLeft;
+      const timeSpentSeconds = totalTimeLimit - timeLeft;
       
       const newRecord = {
         id: Date.now(),
@@ -88,12 +89,26 @@ function App() {
           </div>
           <h1 className="text-4xl font-extrabold text-slate-800 mb-4 tracking-tight">Simulador Wonderlic</h1>
           <p className="text-slate-500 mb-8 text-lg">
-            Prueba rápida de <span className="font-bold text-indigo-600">{MAX_QUESTIONS} preguntas</span>. Evalúa lógica, matemáticas y vocabulario bajo presión.
+            Selecciona tu modo de entrenamiento. Evalúa lógica, matemáticas y vocabulario bajo presión.
           </p>
-          <button onClick={startTest} className="flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-8 rounded-xl w-full transition-all shadow-lg hover:shadow-indigo-500/30 text-lg">
-            <Play fill="currentColor" size={20} />
-            Iniciar Simulacro
-          </button>
+          
+          <div className="flex flex-col gap-4">
+            <button 
+              onClick={() => startTest(5, 120)} 
+              className="flex items-center justify-center gap-2 bg-white border-2 border-indigo-200 text-indigo-600 hover:bg-indigo-50 font-bold py-4 px-8 rounded-xl w-full transition-all text-lg shadow-sm"
+            >
+              <Play fill="currentColor" size={20} />
+              Práctica (5 Pregs / 2 Min)
+            </button>
+
+            <button 
+              onClick={() => startTest(50, 720)} 
+              className="flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-8 rounded-xl w-full transition-all shadow-lg hover:shadow-indigo-500/30 text-lg"
+            >
+              <Target size={20} />
+              Simulacro Oficial (50 Pregs / 12 Min)
+            </button>
+          </div>
         </div>
       </div>
     );
