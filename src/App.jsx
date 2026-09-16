@@ -205,21 +205,7 @@ function App() {
   }
 
   // VISTA 3: RESULTADOS DEL TEST
-  if (isFinished) {
-    const score = calculateScore();
-    const percentage = Math.round((score / questions.length) * 100);
-    return (
-      <div className="min-h-screen bg-slate-50 p-4 md:p-8 font-sans flex items-center justify-center">
-        <div className="max-w-3xl w-full bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100">
-          <div className="bg-indigo-600 p-12 text-center text-white">
-            <h2 className="text-3xl font-bold mb-2">¡Test Finalizado!</h2>
-            <div className="text-7xl font-extrabold my-6 drop-shadow-md">{percentage}%</div>
-            <p className="text-indigo-100 text-xl font-medium flex items-center justify-center gap-2">
-              <CheckCircle2 /> {score} de {questions.length} correctas
-            </p>
-          </div>
-          
-          <div className="p-8 max-h-[50vh] overflow-y-auto bg-slate-50">
+  <div className="p-8 max-h-[50vh] overflow-y-auto bg-slate-50">
             {questions.map((q, idx) => {
               const isCorrect = answers[q.id] === q.correct_answer;
               return (
@@ -231,33 +217,27 @@ function App() {
                     {isCorrect ? <CheckCircle2 size={18} /> : <XCircle size={18} />}
                     Tu respuesta: {answers[q.id] !== undefined ? q.options[answers[q.id]] : 'Sin responder'}
                   </p>
-                  {!isCorrect && (
-                    <div className="mt-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                  
+                  {/* --- NUEVO BLOQUE: Explicación siempre visible --- */}
+                  <div className={`mt-4 p-4 rounded-xl border ${isCorrect ? 'bg-emerald-50/50 border-emerald-100' : 'bg-slate-50 border-slate-200'}`}>
+                    {!isCorrect && (
                       <p className="text-sm text-slate-800 mb-2">
                         <span className="font-bold text-rose-600 uppercase text-xs tracking-wider">Correcta:</span> {q.options[q.correct_answer]}
                       </p>
-                      <p className="text-sm text-slate-600">
-                        <span className="font-bold text-slate-500 uppercase text-xs tracking-wider">Explicación:</span> {q.explanation}
-                      </p>
-                    </div>
-                  )}
+                    )}
+                    <p className="text-sm text-slate-700">
+                      <span className={`font-bold uppercase text-xs tracking-wider mr-2 ${isCorrect ? 'text-emerald-600' : 'text-slate-500'}`}>
+                        Explicación:
+                      </span> 
+                      {q.explanation}
+                    </p>
+                  </div>
+                  {/* ----------------------------------------------- */}
+
                 </div>
               )
             })}
           </div>
-
-          <div className="p-8 bg-white border-t flex justify-center gap-4 flex-col md:flex-row">
-            <button onClick={() => window.location.reload()} className="flex items-center justify-center gap-2 bg-white border-2 border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-indigo-200 hover:text-indigo-600 font-bold py-3 px-8 rounded-xl transition-all shadow-sm text-lg w-full md:w-auto">
-              <RotateCcw size={20} /> Reintentar
-            </button>
-            <button onClick={() => { startTest(); finishTest(); setCurrentView('dashboard'); window.location.reload() }} className="flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-xl transition-all shadow-sm text-lg w-full md:w-auto">
-              <BarChart3 size={20} /> Ver Métricas
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   // VISTA 4: EVALUACIÓN (EL TEST EN SÍ)
   // (Mantiene exactamente el mismo código visual hermoso que ya teníamos para responder)
