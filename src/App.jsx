@@ -2,6 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useAssessment } from './useAssessment';
 import questionsData from './questions.json'; 
 
+// Configuración rápida (Cambia a 50 y 720 cuando estés listo para el test real)
+const MAX_QUESTIONS = 5;
+const TIME_LIMIT = 120;
+
 function App() {
   const {
     questions,
@@ -16,12 +20,10 @@ function App() {
     nextQuestion,
     prevQuestion,
     finishTest
-  } = useAssessment(questionsData, 5, 120); // Mantenemos 5 preguntas / 2 min para probar rápido
+  } = useAssessment(questionsData, MAX_QUESTIONS, TIME_LIMIT);
 
-  // 1. Nuevo estado para el historial
   const [history, setHistory] = useState([]);
 
-  // 2. Cargar el historial al iniciar la app
   useEffect(() => {
     const savedHistory = JSON.parse(localStorage.getItem('wonderlic_history')) || [];
     setHistory(savedHistory);
@@ -41,7 +43,6 @@ function App() {
     return correct;
   };
 
-  // 3. Efecto para guardar el score automáticamente cuando el test termina
   useEffect(() => {
     if (isFinished) {
       const score = calculateScore();
@@ -52,34 +53,38 @@ function App() {
         total: questions.length
       };
       
-      // Guardamos el nuevo registro y mantenemos solo los últimos 10 para no saturar
       const updatedHistory = [newRecord, ...history].slice(0, 10);
       setHistory(updatedHistory);
       localStorage.setItem('wonderlic_history', JSON.stringify(updatedHistory));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isFinished]); // Solo se ejecuta cuando isFinished cambia a true
+  }, [isFinished]);
 
   if (!isActive && !isFinished) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4">
-        <div className="bg-white p-8 rounded-lg shadow-md max-w-md w-full text-center border-t-4 border-blue-600 mb-6">
-          <h1 className="text-3xl font-bold text-gray-800 mb-4">Simulador Wonderlic</h1>
-          <p className="text-gray-600 mb-6">Prueba de {questions.length} preguntas. Evalúa lógica, matemáticas y vocabulario bajo presión.</p>
-          <button onClick={startTest} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg w-full transition-colors shadow-sm">
+      <div className="min-h-screen bg-gradient-to-br from-slate-100 to-slate-200 flex flex-col items-center justify-center p-4 font-sans">
+        <div className="bg-white p-10 rounded-2xl shadow-xl max-w-lg w-full text-center border-t-8 border-indigo-600 mb-8 transform transition-all">
+          <div className="bg-indigo-100 text-indigo-700 p-4 rounded-full w-20 h-20 mx-auto mb-6 flex items-center justify-center shadow-inner">
+            <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+          </div>
+          <h1 className="text-4xl font-extrabold text-slate-800 mb-4 tracking-tight">Simulador Wonderlic</h1>
+          <p className="text-slate-600 mb-8 text-lg">Prueba rápida de <span className="font-bold text-indigo-600">{MAX_QUESTIONS} preguntas</span>. Evalúa lógica, matemáticas y vocabulario bajo presión.</p>
+          <button onClick={startTest} className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-8 rounded-xl w-full transition-all shadow-lg hover:shadow-indigo-500/30 text-lg">
             Iniciar Simulacro
           </button>
         </div>
 
-        {/* 4. Nueva sección visual: Historial de Intentos */}
         {history.length > 0 && (
-          <div className="bg-white p-6 rounded-lg shadow-md max-w-md w-full">
-            <h2 className="text-xl font-bold text-gray-800 mb-4 border-b pb-2">Tu Progreso (Últimos 10)</h2>
+          <div className="bg-white p-8 rounded-2xl shadow-lg max-w-lg w-full">
+            <h2 className="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-2">
+              <svg className="w-6 h-6 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+              Tu Progreso Reciente
+            </h2>
             <div className="flex flex-col gap-3">
               {history.map((record) => (
-                <div key={record.id} className="flex justify-between items-center bg-gray-50 p-3 rounded border">
-                  <span className="text-sm text-gray-500">{record.date}</span>
-                  <span className="font-bold text-blue-600">{record.score} / {record.total} aciertos</span>
+                <div key={record.id} className="flex justify-between items-center bg-slate-50 p-4 rounded-xl border border-slate-100 hover:border-indigo-100 transition-colors">
+                  <span className="text-sm text-slate-500 font-medium">{record.date}</span>
+                  <span className="font-bold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full">{record.score} / {record.total} aciertos</span>
                 </div>
               ))}
             </div>
@@ -91,80 +96,105 @@ function App() {
 
   if (isFinished) {
     const score = calculateScore();
+    const percentage = Math.round((score / questions.length) * 100);
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4">
-        <div className="bg-white p-8 rounded-lg shadow-md max-w-2xl w-full text-center">
-          <h2 className="text-3xl font-bold text-gray-800 mb-2">¡Test Finalizado!</h2>
-          <p className="text-xl text-gray-600 mb-6">Tu puntuación: <span className="font-bold text-blue-600">{score} de {questions.length}</span></p>
+      <div className="min-h-screen bg-slate-100 p-4 md:p-8 font-sans flex items-center justify-center">
+        <div className="max-w-3xl w-full bg-white rounded-2xl shadow-xl overflow-hidden">
+          <div className="bg-indigo-600 p-10 text-center text-white">
+            <h2 className="text-3xl font-bold mb-2">¡Test Finalizado!</h2>
+            <div className="text-7xl font-extrabold my-6">{percentage}%</div>
+            <p className="text-indigo-100 text-xl font-medium">Puntuación: {score} de {questions.length} correctas</p>
+          </div>
           
-          <div className="text-left mb-6 max-h-[50vh] overflow-y-auto pr-2">
-            {questions.map((q, idx) => (
-              <div key={q.id} className="mb-4 p-4 border rounded bg-gray-50">
-                <p className="font-semibold">{idx + 1}. {q.question}</p>
-                <p className={`text-sm mt-2 ${answers[q.id] === q.correct_answer ? 'text-green-600 font-medium' : 'text-red-600 font-medium'}`}>
-                  Tu respuesta: {answers[q.id] !== undefined ? q.options[answers[q.id]] : 'Sin responder'}
-                </p>
-                {answers[q.id] !== q.correct_answer && (
-                  <p className="text-sm text-gray-700 mt-2 bg-white p-2 rounded border"><span className="font-semibold text-gray-900">Explicación:</span> <br/><span className="italic">{q.explanation}</span></p>
-                )}
-              </div>
-            ))}
+          <div className="p-8 max-h-[50vh] overflow-y-auto">
+            {questions.map((q, idx) => {
+              const isCorrect = answers[q.id] === q.correct_answer;
+              return (
+                <div key={q.id} className={`mb-6 p-6 border-l-8 rounded-r-xl bg-slate-50 shadow-sm ${isCorrect ? 'border-emerald-500' : 'border-rose-500'}`}>
+                  <p className="font-bold text-slate-800 text-lg mb-4">{idx + 1}. {q.question}</p>
+                  <p className={`text-md mb-3 font-semibold ${isCorrect ? 'text-emerald-600' : 'text-rose-600'}`}>
+                    Tu respuesta: {answers[q.id] !== undefined ? q.options[answers[q.id]] : 'Sin responder'}
+                  </p>
+                  {!isCorrect && (
+                    <div className="mt-4 bg-white p-4 rounded-lg border border-slate-200">
+                      <p className="text-sm text-slate-800 mb-2"><span className="font-bold text-rose-600 uppercase text-xs tracking-wider">Respuesta Correcta:</span> <br/>{q.options[q.correct_answer]}</p>
+                      <p className="text-sm text-slate-600"><span className="font-bold uppercase text-xs tracking-wider">Explicación:</span> <br/>{q.explanation}</p>
+                    </div>
+                  )}
+                </div>
+              )
+            })}
           </div>
 
-          <button onClick={() => window.location.reload()} className="border-2 border-blue-600 text-blue-600 hover:bg-blue-50 font-bold py-2 px-6 rounded transition-colors w-full sm:w-auto">
-            Volver al Inicio
-          </button>
+          <div className="p-6 bg-slate-50 border-t flex justify-center">
+            <button onClick={() => window.location.reload()} className="bg-white border-2 border-indigo-600 text-indigo-600 hover:bg-indigo-50 font-bold py-3 px-8 rounded-xl transition-colors shadow-sm text-lg w-full md:w-auto">
+              Volver al Inicio
+            </button>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 pt-10">
-      <div className="max-w-2xl mx-auto bg-white rounded-xl shadow-sm border p-6 md:p-10">
+    <div className="min-h-screen bg-slate-100 p-4 pt-8 md:pt-12 font-sans">
+      <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
         
-        <div className="flex justify-between items-center mb-8 border-b pb-4">
-          <span className="font-semibold text-gray-500">Pregunta {currentIndex + 1} de {questions.length}</span>
-          <span className={`font-mono text-xl font-bold ${timeLeft < 30 ? 'text-red-600 animate-pulse' : 'text-gray-800'}`}>
-            ⏱ {formatTime(timeLeft)}
-          </span>
+        {/* Header con barra de progreso */}
+        <div className="bg-white px-8 py-6 border-b">
+          <div className="flex justify-between items-center mb-4">
+            <span className="font-bold text-slate-500 uppercase tracking-wider text-sm">Pregunta {currentIndex + 1} de {questions.length}</span>
+            <span className={`font-mono text-2xl font-extrabold px-4 py-1 rounded-lg ${timeLeft < 30 ? 'bg-rose-100 text-rose-600 animate-pulse' : 'bg-slate-100 text-slate-800'}`}>
+              ⏱ {formatTime(timeLeft)}
+            </span>
+          </div>
+          <div className="w-full bg-slate-100 rounded-full h-2.5">
+            <div className="bg-indigo-600 h-2.5 rounded-full transition-all duration-300" style={{ width: `${((currentIndex + 1) / questions.length) * 100}%` }}></div>
+          </div>
         </div>
 
-        <div className="mb-8 min-h-[200px]">
-          <h3 className="text-xl md:text-2xl font-medium text-gray-800 mb-6">{currentQuestion?.question}</h3>
-          <div className="flex flex-col gap-3">
+        {/* Body de la Pregunta */}
+        <div className="p-8 md:p-10 min-h-[350px]">
+          <h3 className="text-2xl md:text-3xl font-bold text-slate-800 mb-8 leading-snug">{currentQuestion?.question}</h3>
+          <div className="flex flex-col gap-4">
             {currentQuestion?.options.map((opt, idx) => (
               <button
                 key={idx}
                 onClick={() => handleAnswer(currentQuestion.id, idx)}
-                className={`p-4 text-left border rounded-lg transition-all ${
+                className={`w-full p-5 text-left border-2 rounded-xl transition-all duration-200 text-lg font-medium shadow-sm flex items-center ${
                   answers[currentQuestion.id] === idx 
-                    ? 'bg-blue-50 border-blue-500 ring-2 ring-blue-200 font-medium' 
-                    : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                    ? 'bg-indigo-50 border-indigo-500 text-indigo-800 ring-4 ring-indigo-500/10 transform scale-[1.01]' 
+                    : 'border-slate-200 text-slate-700 hover:border-indigo-300 hover:bg-slate-50 hover:shadow'
                 }`}
               >
+                <span className={`inline-block w-8 h-8 rounded-full text-center leading-8 mr-4 font-bold border shrink-0 ${answers[currentQuestion.id] === idx ? 'bg-indigo-200 text-indigo-700 border-indigo-300' : 'bg-slate-100 text-slate-500 border-slate-200'}`}>
+                  {['A', 'B', 'C', 'D', 'E'][idx]}
+                </span>
                 {opt}
               </button>
             ))}
           </div>
         </div>
 
-        <div className="flex justify-between pt-6 border-t mt-auto">
+        {/* Footer de Navegación */}
+        <div className="px-8 py-6 bg-slate-50 border-t flex justify-between items-center">
           <button 
             onClick={prevQuestion} 
             disabled={currentIndex === 0} 
-            className="px-6 py-2 border rounded text-gray-600 disabled:opacity-30 hover:bg-gray-50 transition-colors"
+            className="px-6 py-3 font-bold text-slate-600 disabled:opacity-30 hover:text-indigo-600 transition-colors flex items-center gap-2"
           >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
             Anterior
           </button>
           
           {currentIndex === questions.length - 1 ? (
-             <button onClick={finishTest} className="px-8 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded transition-colors shadow-sm">
-               Finalizar
+             <button onClick={finishTest} className="px-8 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-xl transition-all shadow-lg hover:shadow-emerald-500/40 text-lg">
+               Finalizar Test
              </button>
           ) : (
-             <button onClick={nextQuestion} className="px-8 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded transition-colors shadow-sm">
+             <button onClick={nextQuestion} className="px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl transition-all shadow-lg hover:shadow-indigo-500/40 text-lg flex items-center gap-2">
                Siguiente
+               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
              </button>
           )}
         </div>
