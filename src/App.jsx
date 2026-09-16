@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useAssessment } from './useAssessment';
 import questionsData from './questions.json'; 
-import { BrainCircuit, Play, Clock, ChevronRight, ChevronLeft, CheckCircle2, XCircle, RotateCcw, Target } from 'lucide-react';
+import { BrainCircuit, Play, Clock, ChevronRight, ChevronLeft, CheckCircle2, XCircle, RotateCcw, Target, BarChart3, Home, Trophy, Activity } from 'lucide-react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const MAX_QUESTIONS = 5; // Cambiar a 50 para el test real
 const TIME_LIMIT = 120;  // Cambiar a 720 (12 minutos)
@@ -14,6 +15,7 @@ function App() {
   } = useAssessment(questionsData, MAX_QUESTIONS, TIME_LIMIT);
 
   const [history, setHistory] = useState([]);
+  const [currentView, setCurrentView] = useState('home'); // 'home' o 'dashboard'
 
   useEffect(() => {
     const savedHistory = JSON.parse(localStorage.getItem('wonderlic_history')) || [];
@@ -37,24 +39,48 @@ function App() {
   useEffect(() => {
     if (isFinished) {
       const score = calculateScore();
+      const timeSpentSeconds = TIME_LIMIT - timeLeft;
+      
       const newRecord = {
         id: Date.now(),
-        date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+        date: new Date().toLocaleDateString(),
+        time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
         score: score,
-        total: questions.length
+        incorrect: questions.length - score,
+        total: questions.length,
+        percentage: Math.round((score / questions.length) * 100),
+        timeSpent: formatTime(timeSpentSeconds)
       };
-      const updatedHistory = [newRecord, ...history].slice(0, 10);
+      
+      // Guardamos todo el historial (sin límite de 10) para el gráfico
+      const updatedHistory = [newRecord, ...history];
       setHistory(updatedHistory);
       localStorage.setItem('wonderlic_history', JSON.stringify(updatedHistory));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFinished]);
 
+  // Cálculos para el Dashboard
+  const bestScore = history.length > 0 ? Math.max(...history.map(h => h.percentage)) : 0;
+  const avgScore = history.length > 0 ? Math.round(history.reduce((acc, curr) => acc + curr.percentage, 0) / history.length) : 0;
+  const chartData = [...history].reverse().map((h, i) => ({
+    name: `Test ${i + 1}`,
+    Puntaje: h.percentage
+  }));
+
   // VISTA 1: INICIO
-  if (!isActive && !isFinished) {
+  if (!isActive && !isFinished && currentView === 'home') {
     return (
       <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6 font-sans">
-        <div className="bg-white p-10 rounded-3xl shadow-xl max-w-lg w-full text-center border border-slate-100 mb-8">
+        
+        {/* Navegación Superior */}
+        <div className="absolute top-6 right-6 flex gap-4">
+          <button onClick={() => setCurrentView('dashboard')} className="flex items-center gap-2 bg-white text-indigo-600 px-4 py-2 rounded-xl shadow-sm border border-slate-200 hover:bg-indigo-50 transition-colors font-bold">
+            <BarChart3 size={18} /> Métricas y Leaderboard
+          </button>
+        </div>
+
+        <div className="bg-white p-10 rounded-3xl shadow-xl max-w-lg w-full text-center border border-slate-100 mb-8 mt-12">
           <div className="bg-indigo-100 text-indigo-600 p-5 rounded-2xl w-24 h-24 mx-auto mb-6 flex items-center justify-center shadow-inner">
             <BrainCircuit size={48} strokeWidth={1.5} />
           </div>
@@ -67,30 +93,118 @@ function App() {
             Iniciar Simulacro
           </button>
         </div>
-
-        {history.length > 0 && (
-          <div className="bg-white p-8 rounded-3xl shadow-md border border-slate-100 max-w-lg w-full">
-            <h2 className="text-xl font-bold text-slate-700 mb-6 flex items-center gap-2">
-              <Target className="text-indigo-500" />
-              Tu Progreso Reciente
-            </h2>
-            <div className="flex flex-col gap-3">
-              {history.map((record) => (
-                <div key={record.id} className="flex justify-between items-center bg-slate-50 p-4 rounded-xl border border-slate-100 hover:border-indigo-100 transition-colors">
-                  <span className="text-sm text-slate-500 font-medium flex items-center gap-2">
-                    <Clock size={14} /> {record.date}
-                  </span>
-                  <span className="font-bold text-indigo-600 bg-indigo-50 px-4 py-1 rounded-full">{record.score} / {record.total}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
     );
   }
 
-  // VISTA 2: RESULTADOS
+  // VISTA 2: DASHBOARD Y METRICAS
+  if (!isActive && !isFinished && currentView === 'dashboard') {
+    return (
+      <div className="min-h-screen bg-slate-50 p-6 md:p-12 font-sans">
+        <div className="max-w-5xl mx-auto">
+          
+          <div className="flex justify-between items-center mb-8">
+            <h1 className="text-3xl font-extrabold text-slate-800 flex items-center gap-3">
+              <Activity className="text-indigo-600" size={32} /> Tu Evolución
+            </h1>
+            <button onClick={() => setCurrentView('home')} className="flex items-center gap-2 bg-white text-slate-600 px-4 py-2 rounded-xl shadow-sm border border-slate-200 hover:bg-slate-50 transition-colors font-bold">
+              <Home size={18} /> Volver al Inicio
+            </button>
+          </div>
+
+          {history.length === 0 ? (
+            <div className="bg-white p-12 rounded-3xl shadow-sm text-center border border-slate-100">
+              <Target size={48} className="mx-auto text-slate-300 mb-4" />
+              <h2 className="text-xl font-bold text-slate-600">Aún no hay datos</h2>
+              <p className="text-slate-400 mt-2">Completa tu primer simulacro para ver tus métricas aquí.</p>
+            </div>
+          ) : (
+            <>
+              {/* Tarjetas KPI */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4">
+                  <div className="bg-blue-100 p-4 rounded-xl text-blue-600"><Target size={28} /></div>
+                  <div>
+                    <p className="text-sm text-slate-500 font-bold uppercase tracking-wider">Tests Completados</p>
+                    <p className="text-3xl font-extrabold text-slate-800">{history.length}</p>
+                  </div>
+                </div>
+                <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4">
+                  <div className="bg-emerald-100 p-4 rounded-xl text-emerald-600"><Trophy size={28} /></div>
+                  <div>
+                    <p className="text-sm text-slate-500 font-bold uppercase tracking-wider">Mejor Puntaje</p>
+                    <p className="text-3xl font-extrabold text-slate-800">{bestScore}%</p>
+                  </div>
+                </div>
+                <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4">
+                  <div className="bg-indigo-100 p-4 rounded-xl text-indigo-600"><Activity size={28} /></div>
+                  <div>
+                    <p className="text-sm text-slate-500 font-bold uppercase tracking-wider">Promedio Global</p>
+                    <p className="text-3xl font-extrabold text-slate-800">{avgScore}%</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Gráfico de Evolución */}
+              <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 mb-8 h-80">
+                <h3 className="text-lg font-bold text-slate-700 mb-4 px-2">Tendencia de Aciertos (%)</h3>
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={chartData} margin={{ top: 5, right: 20, bottom: 25, left: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#64748b', fontSize: 12}} dy={10} />
+                    <YAxis axisLine={false} tickLine={false} tick={{fill: '#64748b', fontSize: 12}} domain={[0, 100]} />
+                    <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
+                    <Line type="monotone" dataKey="Puntaje" stroke="#4f46e5" strokeWidth={4} dot={{ r: 6, fill: '#4f46e5', strokeWidth: 2, stroke: '#ffffff' }} activeDot={{ r: 8 }} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+
+              {/* Leaderboard Histórico */}
+              <div className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
+                <div className="p-6 border-b border-slate-100">
+                  <h3 className="text-lg font-bold text-slate-700">Leaderboard Personal</h3>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left border-collapse">
+                    <thead>
+                      <tr className="bg-slate-50 text-slate-500 text-sm uppercase tracking-wider">
+                        <th className="p-4 font-semibold">Fecha y Hora</th>
+                        <th className="p-4 font-semibold">Score</th>
+                        <th className="p-4 font-semibold text-emerald-600">Correctas</th>
+                        <th className="p-4 font-semibold text-rose-500">Incorrectas</th>
+                        <th className="p-4 font-semibold">Tiempo Usado</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {history.map((record, idx) => (
+                        <tr key={record.id} className="hover:bg-slate-50 transition-colors">
+                          <td className="p-4 text-slate-600 font-medium">
+                            {record.date} <span className="text-slate-400 text-sm ml-2">{record.time}</span>
+                          </td>
+                          <td className="p-4">
+                            <span className={`px-3 py-1 rounded-full text-sm font-bold ${record.percentage >= 70 ? 'bg-emerald-100 text-emerald-700' : record.percentage >= 50 ? 'bg-amber-100 text-amber-700' : 'bg-rose-100 text-rose-700'}`}>
+                              {record.percentage}%
+                            </span>
+                          </td>
+                          <td className="p-4 font-bold text-emerald-600">{record.score}</td>
+                          <td className="p-4 font-bold text-rose-500">{record.incorrect}</td>
+                          <td className="p-4 font-mono text-slate-600 flex items-center gap-2">
+                            <Clock size={14} className="text-slate-400"/> {record.timeSpent}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // VISTA 3: RESULTADOS DEL TEST
   if (isFinished) {
     const score = calculateScore();
     const percentage = Math.round((score / questions.length) * 100);
@@ -132,9 +246,12 @@ function App() {
             })}
           </div>
 
-          <div className="p-8 bg-white border-t flex justify-center">
-            <button onClick={() => window.location.reload()} className="flex items-center gap-2 bg-white border-2 border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-indigo-200 hover:text-indigo-600 font-bold py-3 px-8 rounded-xl transition-all shadow-sm text-lg w-full md:w-auto">
-              <RotateCcw size={20} /> Volver al Inicio
+          <div className="p-8 bg-white border-t flex justify-center gap-4 flex-col md:flex-row">
+            <button onClick={() => window.location.reload()} className="flex items-center justify-center gap-2 bg-white border-2 border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-indigo-200 hover:text-indigo-600 font-bold py-3 px-8 rounded-xl transition-all shadow-sm text-lg w-full md:w-auto">
+              <RotateCcw size={20} /> Reintentar
+            </button>
+            <button onClick={() => { startTest(); finishTest(); setCurrentView('dashboard'); window.location.reload() }} className="flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-xl transition-all shadow-sm text-lg w-full md:w-auto">
+              <BarChart3 size={20} /> Ver Métricas
             </button>
           </div>
         </div>
@@ -142,7 +259,8 @@ function App() {
     );
   }
 
-  // VISTA 3: EVALUACIÓN
+  // VISTA 4: EVALUACIÓN (EL TEST EN SÍ)
+  // (Mantiene exactamente el mismo código visual hermoso que ya teníamos para responder)
   return (
     <div className="min-h-screen bg-slate-50 p-4 pt-8 md:pt-12 font-sans flex justify-center">
       <div className="max-w-3xl w-full bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 flex flex-col">
