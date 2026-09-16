@@ -4,12 +4,8 @@ import questionsData from './questions.json';
 import { BrainCircuit, Play, Clock, ChevronRight, ChevronLeft, CheckCircle2, XCircle, RotateCcw, Target, BarChart3, Home, Trophy, Activity, Eye, X } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
-const MAX_QUESTIONS = 5; // Cambiar a 50 para el test real
-const TIME_LIMIT = 120;  // Cambiar a 720 (12 minutos)
-
 function App() {
-  
-const {
+  const {
     questions, currentQuestion, currentIndex, timeLeft, totalTimeLimit, isActive,
     isFinished, answers, startTest, handleAnswer, nextQuestion,
     prevQuestion, finishTest
@@ -17,9 +13,10 @@ const {
 
   const [history, setHistory] = useState([]);
   const [currentView, setCurrentView] = useState('home'); // 'home' o 'dashboard'
-  
-  // NUEVO: Estado para manejar el modal de detalles
   const [selectedRecord, setSelectedRecord] = useState(null);
+  
+  // NUEVO: Estado para saber si estamos en práctica o simulacro real
+  const [testMode, setTestMode] = useState('practice'); 
 
   useEffect(() => {
     const savedHistory = JSON.parse(localStorage.getItem('wonderlic_history')) || [];
@@ -54,7 +51,7 @@ const {
         total: questions.length,
         percentage: Math.round((score / questions.length) * 100),
         timeSpent: formatTime(timeSpentSeconds),
-        // NUEVO: Guardamos la fotografía exacta de este intento
+        mode: testMode, // Guardamos el modo del test (practice o real)
         testQuestions: questions,
         userAnswers: answers
       };
@@ -65,13 +62,6 @@ const {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFinished]);
-
-  const bestScore = history.length > 0 ? Math.max(...history.map(h => h.percentage)) : 0;
-  const avgScore = history.length > 0 ? Math.round(history.reduce((acc, curr) => acc + curr.percentage, 0) / history.length) : 0;
-  const chartData = [...history].reverse().map((h, i) => ({
-    name: `Test ${i + 1}`,
-    Puntaje: h.percentage
-  }));
 
   // VISTA 1: INICIO
   if (!isActive && !isFinished && currentView === 'home') {
@@ -94,7 +84,7 @@ const {
           
           <div className="flex flex-col gap-4">
             <button 
-              onClick={() => startTest(5, 120)} 
+              onClick={() => { setTestMode('practice'); startTest(5, 120); }} 
               className="flex items-center justify-center gap-2 bg-white border-2 border-indigo-200 text-indigo-600 hover:bg-indigo-50 font-bold py-4 px-8 rounded-xl w-full transition-all text-lg shadow-sm"
             >
               <Play fill="currentColor" size={20} />
@@ -102,7 +92,7 @@ const {
             </button>
 
             <button 
-              onClick={() => startTest(50, 720)} 
+              onClick={() => { setTestMode('real'); startTest(50, 720); }} 
               className="flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-8 rounded-xl w-full transition-all shadow-lg hover:shadow-indigo-500/30 text-lg"
             >
               <Target size={20} />
@@ -114,16 +104,70 @@ const {
     );
   }
 
-  // VISTA 2: DASHBOARD Y METRICAS
+  // VISTA 2: DASHBOARD Y METRICAS DIVIDIDAS
   if (!isActive && !isFinished && currentView === 'dashboard') {
+    
+    // Separar los datos para las gráficas
+    const practiceHistory = history.filter(h => h.mode === 'practice');
+    const realHistory = history.filter(h => h.mode === 'real');
+
+    // Función auxiliar para formatear datos de Recharts
+    const formatChartData = (data) => {
+      return [...data].reverse().map((h, i) => ({
+        name: `T${i + 1}`,
+        Puntaje: h.percentage
+      }));
+    };
+
+    const MetricsPanel = ({ title, data, colorClass, isReal }) => {
+      const avg = data.length > 0 ? Math.round(data.reduce((acc, curr) => acc + curr.percentage, 0) / data.length) : 0;
+      const best = data.length > 0 ? Math.max(...data.map(h => h.percentage)) : 0;
+      const chartData = formatChartData(data);
+
+      return (
+        <div className={`bg-white p-6 rounded-3xl shadow-sm border-2 ${isReal ? 'border-rose-100' : 'border-indigo-100'} flex flex-col gap-6`}>
+          <div className="flex justify-between items-center border-b pb-4">
+            <h3 className={`text-xl font-bold ${colorClass}`}>{title}</h3>
+            <span className="text-slate-400 text-sm font-bold bg-slate-100 px-3 py-1 rounded-full">{data.length} intentos</span>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 text-center">
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Promedio</p>
+              <p className="text-2xl font-black text-slate-700">{avg}%</p>
+            </div>
+            <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 text-center">
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Mejor</p>
+              <p className="text-2xl font-black text-slate-700">{best}%</p>
+            </div>
+          </div>
+
+          <div className="h-48 w-full mt-2">
+            {data.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={chartData} margin={{ top: 5, right: 10, bottom: 0, left: -20 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 10}} dy={10} />
+                  <YAxis axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 10}} domain={[0, 100]} />
+                  <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
+                  <Line type="monotone" dataKey="Puntaje" stroke={isReal ? '#f43f5e' : '#6366f1'} strokeWidth={3} dot={{ r: 4, strokeWidth: 2 }} activeDot={{ r: 6 }} />
+                </LineChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-full flex items-center justify-center text-slate-300 font-medium">Sin datos suficientes</div>
+            )}
+          </div>
+        </div>
+      );
+    };
+
     return (
       <div className="min-h-screen bg-slate-50 p-6 md:p-12 font-sans relative">
         
-        {/* NUEVO: Modal de Detalles */}
+        {/* MODAL DE DETALLES (Permanece igual) */}
         {selectedRecord && (
           <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
             <div className="bg-white rounded-3xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-              
               <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-white">
                 <div>
                   <h3 className="text-2xl font-bold text-slate-800 flex items-center gap-2">
@@ -143,7 +187,7 @@ const {
               </div>
               
               <div className="p-6 overflow-y-auto flex-grow bg-slate-50">
-                {selectedRecord.testQuestions.map((q, idx) => {
+                {selectedRecord.testQuestions?.map((q, idx) => {
                   const isCorrect = selectedRecord.userAnswers[q.id] === q.correct_answer;
                   return (
                     <div key={q.id} className={`mb-6 p-6 border-l-8 rounded-r-2xl bg-white shadow-sm ${isCorrect ? 'border-emerald-500' : 'border-rose-500'}`}>
@@ -154,7 +198,6 @@ const {
                         {isCorrect ? <CheckCircle2 size={18} /> : <XCircle size={18} />}
                         Tu respuesta: {selectedRecord.userAnswers[q.id] !== undefined ? q.options[selectedRecord.userAnswers[q.id]] : 'Sin responder'}
                       </p>
-                      
                       <div className={`mt-4 p-4 rounded-xl border ${isCorrect ? 'bg-emerald-50/50 border-emerald-100' : 'bg-slate-50 border-slate-200'}`}>
                         {!isCorrect && (
                           <p className="text-sm text-slate-800 mb-2">
@@ -175,7 +218,6 @@ const {
             </div>
           </div>
         )}
-        {/* Fin del Modal */}
 
         <div className="max-w-5xl mx-auto">
           <div className="flex justify-between items-center mb-8">
@@ -183,7 +225,7 @@ const {
               <Activity className="text-indigo-600" size={32} /> Tu Evolución
             </h1>
             <button onClick={() => setCurrentView('home')} className="flex items-center gap-2 bg-white text-slate-600 px-4 py-2 rounded-xl shadow-sm border border-slate-200 hover:bg-slate-50 transition-colors font-bold">
-              <Home size={18} /> Volver al Inicio
+              <Home size={18} /> Volver
             </button>
           </div>
 
@@ -195,56 +237,37 @@ const {
             </div>
           ) : (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4">
-                  <div className="bg-blue-100 p-4 rounded-xl text-blue-600"><Target size={28} /></div>
-                  <div>
-                    <p className="text-sm text-slate-500 font-bold uppercase tracking-wider">Tests Completados</p>
-                    <p className="text-3xl font-extrabold text-slate-800">{history.length}</p>
-                  </div>
-                </div>
-                <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4">
-                  <div className="bg-emerald-100 p-4 rounded-xl text-emerald-600"><Trophy size={28} /></div>
-                  <div>
-                    <p className="text-sm text-slate-500 font-bold uppercase tracking-wider">Mejor Puntaje</p>
-                    <p className="text-3xl font-extrabold text-slate-800">{bestScore}%</p>
-                  </div>
-                </div>
-                <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4">
-                  <div className="bg-indigo-100 p-4 rounded-xl text-indigo-600"><Activity size={28} /></div>
-                  <div>
-                    <p className="text-sm text-slate-500 font-bold uppercase tracking-wider">Promedio Global</p>
-                    <p className="text-3xl font-extrabold text-slate-800">{avgScore}%</p>
-                  </div>
-                </div>
+              {/* PANALES DIVIDIDOS */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <MetricsPanel 
+                  title="Modo Práctica (5 Qs)" 
+                  data={practiceHistory} 
+                  colorClass="text-indigo-600" 
+                  isReal={false} 
+                />
+                <MetricsPanel 
+                  title="Test Real (50 Qs)" 
+                  data={realHistory} 
+                  colorClass="text-rose-600" 
+                  isReal={true} 
+                />
               </div>
 
-              <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 mb-8 h-80">
-                <h3 className="text-lg font-bold text-slate-700 mb-4 px-2">Tendencia de Aciertos (%)</h3>
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={chartData} margin={{ top: 5, right: 20, bottom: 25, left: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#64748b', fontSize: 12}} dy={10} />
-                    <YAxis axisLine={false} tickLine={false} tick={{fill: '#64748b', fontSize: 12}} domain={[0, 100]} />
-                    <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
-                    <Line type="monotone" dataKey="Puntaje" stroke="#4f46e5" strokeWidth={4} dot={{ r: 6, fill: '#4f46e5', strokeWidth: 2, stroke: '#ffffff' }} activeDot={{ r: 8 }} />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-
+              {/* TABLA HISTÓRICA */}
               <div className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
                 <div className="p-6 border-b border-slate-100">
-                  <h3 className="text-lg font-bold text-slate-700">Leaderboard Personal</h3>
+                  <h3 className="text-lg font-bold text-slate-700">Historial Completo</h3>
                 </div>
                 <div className="overflow-x-auto">
                   <table className="w-full text-left border-collapse">
                     <thead>
                       <tr className="bg-slate-50 text-slate-500 text-sm uppercase tracking-wider">
-                        <th className="p-4 font-semibold">Fecha y Hora</th>
+                        <th className="p-4 font-semibold">Fecha</th>
+                        <th className="p-4 font-semibold">Modo</th>
                         <th className="p-4 font-semibold">Score</th>
-                        <th className="p-4 font-semibold text-emerald-600">Correctas</th>
-                        <th className="p-4 font-semibold text-rose-500">Incorrectas</th>
-                        <th className="p-4 font-semibold">Tiempo Usado</th>
+                        <th className="p-4 font-semibold text-emerald-600">✓</th>
+                        <th className="p-4 font-semibold text-rose-500">✗</th>
+                        <th className="p-4 font-semibold">Tiempo</th>
                         <th className="p-4 font-semibold text-center">Detalle</th>
                       </tr>
                     </thead>
@@ -252,29 +275,33 @@ const {
                       {history.map((record) => (
                         <tr key={record.id} className="hover:bg-slate-50 transition-colors">
                           <td className="p-4 text-slate-600 font-medium">
-                            {record.date} <span className="text-slate-400 text-sm ml-2">{record.time}</span>
+                            {record.date} <span className="text-slate-400 text-sm ml-1">{record.time}</span>
                           </td>
                           <td className="p-4">
-                            <span className={`px-3 py-1 rounded-full text-sm font-bold ${record.percentage >= 70 ? 'bg-emerald-100 text-emerald-700' : record.percentage >= 50 ? 'bg-amber-100 text-amber-700' : 'bg-rose-100 text-rose-700'}`}>
+                            <span className={`px-3 py-1 rounded-full text-xs font-bold ${record.mode === 'real' ? 'bg-rose-100 text-rose-700' : 'bg-indigo-100 text-indigo-700'}`}>
+                              {record.mode === 'real' ? 'REAL' : 'PRÁCTICA'}
+                            </span>
+                          </td>
+                          <td className="p-4">
+                            <span className={`px-3 py-1 rounded-full text-sm font-bold ${record.percentage >= 70 ? 'bg-emerald-100 text-emerald-700' : record.percentage >= 50 ? 'bg-amber-100 text-amber-700' : 'bg-slate-100 text-slate-700'}`}>
                               {record.percentage}%
                             </span>
                           </td>
                           <td className="p-4 font-bold text-emerald-600">{record.score}</td>
                           <td className="p-4 font-bold text-rose-500">{record.incorrect}</td>
-                          <td className="p-4 font-mono text-slate-600 flex items-center gap-2">
+                          <td className="p-4 font-mono text-slate-600 flex items-center gap-1">
                             <Clock size={14} className="text-slate-400"/> {record.timeSpent}
                           </td>
                           <td className="p-4 text-center">
                             {record.testQuestions ? (
                               <button 
                                 onClick={() => setSelectedRecord(record)}
-                                className="p-2 bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white rounded-lg transition-colors inline-flex items-center justify-center"
-                                title="Ver detalle de respuestas"
+                                className="p-2 bg-slate-100 text-slate-600 hover:bg-indigo-600 hover:text-white rounded-lg transition-colors inline-flex"
                               >
                                 <Eye size={18} />
                               </button>
                             ) : (
-                              <span className="text-xs text-slate-400 italic">No disp.</span>
+                              <span className="text-xs text-slate-400 italic">-</span>
                             )}
                           </td>
                         </tr>
@@ -290,7 +317,7 @@ const {
     );
   }
 
-  // VISTA 3: RESULTADOS DEL TEST
+  // VISTA 3: RESULTADOS DEL TEST (Permanece igual)
   if (isFinished) {
     const score = calculateScore();
     const percentage = Math.round((score / questions.length) * 100);
@@ -349,11 +376,10 @@ const {
     );
   }
 
-  // VISTA 4: EVALUACIÓN (EL TEST EN SÍ)
+  // VISTA 4: EVALUACIÓN (Permanece igual)
   return (
     <div className="min-h-screen bg-slate-50 p-4 pt-8 md:pt-12 font-sans flex justify-center">
       <div className="max-w-3xl w-full bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 flex flex-col">
-        
         <div className="bg-white px-8 py-6 border-b border-slate-100">
           <div className="flex justify-between items-center mb-4">
             <span className="font-bold text-slate-400 uppercase tracking-wider text-sm">Pregunta {currentIndex + 1} de {questions.length}</span>
@@ -408,7 +434,6 @@ const {
              </button>
           )}
         </div>
-        
       </div>
     </div>
   );
