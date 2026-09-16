@@ -800,204 +800,204 @@
     "explanation": "El perímetro se calcula sumando todos los lados: 2 * (Largo + Ancho) = 2 * (10 + 5) = 2 * 15 = 30 metros."
   },
   {
-    "id": 76,
+    "id": 101,
     "category": "vocabulary",
-    "question": "Las palabras 'COMPRENSIBLE' y 'DIÁFANO' tienen significados que son:",
+    "question": "Las palabras 'ALTRUISTA' y 'EGOÍSTA' tienen significados que son:",
     "options": ["Similares", "Opuestos", "Ni similares ni opuestos"],
-    "correct_answer": 0,
-    "explanation": "Ambas palabras se refieren a algo que es claro, transparente o muy fácil de entender."
+    "correct_answer": 1,
+    "explanation": "Altruista es alguien que procura el bien ajeno a costa del propio, siendo el antónimo directo de egoísta."
   },
   {
-    "id": 77,
+    "id": 102,
     "category": "math",
-    "question": "Si compras un servidor por $1200 y lo vendes un año después perdiendo el 15% de su valor, ¿a cuánto lo vendiste?",
-    "options": ["$1020", "$1080", "$1100", "$1185"],
-    "correct_answer": 0,
-    "explanation": "El 15% de 1200 es 180. 1200 - 180 = 1020."
+    "question": "Un escritorio cuesta $250. Si tiene un 30% de descuento, ¿cuál es el precio de venta?",
+    "options": ["$75", "$150", "$175", "$220"],
+    "correct_answer": 2,
+    "explanation": "El 10% de 250 es 25. El 30% es 75. Restando el descuento: 250 - 75 = 175."
   },
   {
-    "id": 78,
+    "id": 103,
     "category": "sequences",
-    "question": "¿Qué número continúa la serie? 1/4, 1/2, 1, 2, 4, ___",
-    "options": ["6", "8", "10", "16"],
-    "correct_answer": 1,
-    "explanation": "Cada número se multiplica por 2 (o se duplica). 4 x 2 = 8."
+    "question": "¿Qué número continúa la serie? 4, 16, 36, 64, 100, ___",
+    "options": ["120", "121", "144", "169"],
+    "correct_answer": 2,
+    "explanation": "Son los cuadrados de los números pares consecutivos: 2², 4², 6², 8², 10². El siguiente es 12² = 144."
   },
   {
-    "id": 79,
+    "id": 104,
     "category": "logic",
-    "question": "Ningún sistema seguro tiene contraseñas débiles. Mi sistema tiene contraseñas débiles. Por lo tanto, mi sistema no es seguro.",
-    "options": ["Verdadero", "Falso", "No se puede determinar"],
+    "question": "El proyecto A tiene más líneas de código que el proyecto B. El proyecto C tiene menos líneas de código que el proyecto B. ¿Cuál proyecto tiene más líneas de código?",
+    "options": ["Proyecto A", "Proyecto B", "Proyecto C", "No se puede determinar"],
     "correct_answer": 0,
-    "explanation": "Es un silogismo válido. Si el sistema carece de la condición necesaria para ser seguro (no tener contraseñas débiles), entonces definitivamente no es seguro."
+    "explanation": "La jerarquía de mayor a menor tamaño es: Proyecto A > Proyecto B > Proyecto C."
   },
   {
-    "id": 80,
+    "id": 105,
     "category": "proportions",
-    "question": "Un ciclista viaja a 20 km/h. ¿Cuántos minutos tardará en recorrer 5 kilómetros?",
-    "options": ["10", "15", "20", "25"],
-    "correct_answer": 1,
-    "explanation": "20 km en 60 minutos significa que avanza 1 km cada 3 minutos. 5 km x 3 minutos = 15 minutos."
+    "question": "Un camión recorre 120 km en 6 horas. A la misma velocidad constante, ¿cuánto tardará en recorrer 200 km?",
+    "options": ["8 horas", "9 horas", "10 horas", "12 horas"],
+    "correct_answer": 2,
+    "explanation": "La velocidad del camión es de 20 km por hora (120/6). Para recorrer 200 km a 20 km/h tomará 10 horas."
   },
   {
-    "id": 81,
+    "id": 106,
     "category": "vocabulary",
-    "question": "CÓDIGO es a PROGRAMADOR como PLANO es a...",
-    "options": ["Edificio", "Ingeniero", "Arquitecto", "Dibujo"],
-    "correct_answer": 2,
-    "explanation": "El código es el conjunto de instrucciones creado por un programador, así como el plano es el diseño creado por un arquitecto."
-  },
-  {
-    "id": 82,
-    "category": "math",
-    "question": "En un curso de 40 estudiantes, 24 aprobaron. ¿Qué porcentaje de estudiantes reprobó?",
-    "options": ["16%", "30%", "40%", "60%"],
-    "correct_answer": 2,
-    "explanation": "Si 24 aprobaron, 16 reprobaron (40 - 24 = 16). La fracción 16/40 equivale a 4/10, es decir, el 40%."
-  },
-  {
-    "id": 83,
-    "category": "sequences",
-    "question": "¿Qué número continúa la serie? 10, 11, 13, 16, 20, ___",
-    "options": ["24", "25", "26", "27"],
+    "question": "Las palabras 'INNATO' y 'ADQUIRIDO' tienen significados que son:",
+    "options": ["Similares", "Opuestos", "Ni similares ni opuestos"],
     "correct_answer": 1,
-    "explanation": "La diferencia aumenta en 1 (+1, +2, +3, +4). La siguiente suma es +5. 20 + 5 = 25."
+    "explanation": "Innato es aquello con lo que se nace, mientras que adquirido es lo que se aprende o se obtiene después."
   },
   {
-    "id": 84,
+    "id": 107,
+    "category": "math",
+    "question": "¿Cuánto es la quinta parte de la mitad de 1000?",
+    "options": ["50", "100", "200", "250"],
+    "correct_answer": 1,
+    "explanation": "La mitad de 1000 es 500. La quinta parte de 500 (500 / 5) es 100."
+  },
+  {
+    "id": 108,
+    "category": "sequences",
+    "question": "¿Qué número continúa la serie? 7, 14, 21, 28, 35, ___",
+    "options": ["40", "42", "45", "49"],
+    "correct_answer": 1,
+    "explanation": "La serie avanza sumando 7 cada vez (son los múltiplos de 7). 35 + 7 = 42."
+  },
+  {
+    "id": 109,
     "category": "logic",
-    "question": "Si hoy es dos días después del miércoles, ¿qué día será tres días antes de mañana?",
-    "options": ["Lunes", "Martes", "Miércoles", "Jueves"],
-    "correct_answer": 2,
-    "explanation": "Hoy es viernes (dos días después del miércoles). Mañana será sábado. Tres días antes del sábado es miércoles."
+    "question": "Si ayer fue martes, ¿qué día de la semana será el día después de mañana?",
+    "options": ["Jueves", "Viernes", "Sábado", "Domingo"],
+    "correct_answer": 1,
+    "explanation": "Si ayer fue martes, hoy es miércoles. Mañana es jueves. El día después de mañana es viernes."
   },
   {
-    "id": 85,
+    "id": 110,
     "category": "proportions",
-    "question": "Si 2 pintores pintan una casa en 6 días, ¿cuántos días tardarán 3 pintores en pintar la misma casa?",
-    "options": ["2", "3", "4", "5"],
+    "question": "10 máquinas idénticas producen 100 unidades en 5 minutos. ¿Cuántas unidades producirán 20 máquinas en 10 minutos?",
+    "options": ["200", "300", "400", "500"],
     "correct_answer": 2,
-    "explanation": "El trabajo total requiere 12 'días-pintor' (2 pintores * 6 días). Si tienes 3 pintores, divides el trabajo: 12 / 3 = 4 días."
+    "explanation": "Si duplicas las máquinas (a 20), en los mismos 5 minutos producirán 200 unidades. Si además duplicas el tiempo (a 10 minutos), producirán 400 unidades."
   },
   {
-    "id": 86,
+    "id": 111,
     "category": "vocabulary",
     "question": "¿Cuál de las siguientes palabras es la 'intrusa'?",
-    "options": ["Río", "Lago", "Océano", "Montaña"],
+    "options": ["Manzana", "Pera", "Plátano", "Zanahoria"],
     "correct_answer": 3,
-    "explanation": "Río, lago y océano son masas o corrientes de agua. Montaña es una elevación terrestre."
+    "explanation": "Manzana, pera y plátano son frutas. La zanahoria es una hortaliza/verdura."
   },
   {
-    "id": 87,
+    "id": 112,
     "category": "math",
-    "question": "¿Cuánto es 3/4 dividido por 1/2?",
-    "options": ["3/8", "1", "1.5", "2"],
+    "question": "Dos números están en proporción de 2 a 3 y suman 50. ¿Cuál es el número mayor?",
+    "options": ["10", "20", "30", "40"],
     "correct_answer": 2,
-    "explanation": "Dividir por 1/2 es matemáticamente idéntico a multiplicar por 2. (3/4) * 2 = 6/4 = 1.5."
+    "explanation": "En total hay 5 'partes' (2 + 3). Cada parte vale 10 (50 / 5). El número mayor tiene 3 partes, es decir, 3 * 10 = 30."
   },
   {
-    "id": 88,
+    "id": 113,
     "category": "sequences",
-    "question": "¿Qué número continúa la serie? 0, 1, 1, 2, 3, 5, 8, ___",
-    "options": ["10", "11", "12", "13"],
-    "correct_answer": 3,
-    "explanation": "Es la secuencia de Fibonacci. Cada número es la suma exacta de los dos anteriores (5 + 8 = 13)."
-  },
-  {
-    "id": 89,
-    "category": "logic",
-    "question": "Juan es más rápido que Pedro, pero más lento que Luis. ¿Quién es el más lento?",
-    "options": ["Juan", "Pedro", "Luis", "No se puede determinar"],
-    "correct_answer": 1,
-    "explanation": "El orden de velocidad de mayor a menor es: Luis > Juan > Pedro. Por lo tanto, Pedro es el más lento."
-  },
-  {
-    "id": 90,
-    "category": "proportions",
-    "question": "La proporción de hombres a mujeres en una oficina es de 3 a 5. Si hay 15 hombres, ¿cuántas mujeres hay?",
-    "options": ["15", "20", "25", "30"],
+    "question": "¿Qué número continúa la serie? 5, 25, 125, 625, ___",
+    "options": ["1025", "2525", "3125", "4225"],
     "correct_answer": 2,
-    "explanation": "El multiplicador de la proporción es 5 (ya que 15 hombres / 3 de ratio = 5). Por tanto, la cantidad de mujeres es 5 (el ratio) * 5 (el multiplicador) = 25."
+    "explanation": "Cada número se multiplica por 5 (son las potencias de 5). 625 * 5 = 3125."
   },
   {
-    "id": 91,
+    "id": 114,
+    "category": "logic",
+    "question": "Todos los frameworks de JavaScript son útiles. React es un framework de JavaScript. Angular es útil. ¿Significa esto que Angular es un framework de JavaScript?",
+    "options": ["Verdadero", "Falso", "No se puede determinar"],
+    "correct_answer": 2,
+    "explanation": "Es una falacia de afirmación del consecuente. Que Angular sea útil no significa obligatoriamente que sea un framework de JS, podría ser útil por otra razón."
+  },
+  {
+    "id": 115,
+    "category": "proportions",
+    "question": "En un mapa, 1 centímetro equivale a 50 kilómetros. Si la distancia entre dos ciudades en el mapa es de 4.5 cm, ¿cuál es la distancia real?",
+    "options": ["200 km", "225 km", "250 km", "275 km"],
+    "correct_answer": 1,
+    "explanation": "Se multiplica la medida del mapa por la escala: 4.5 * 50 = 225 kilómetros."
+  },
+  {
+    "id": 116,
     "category": "vocabulary",
-    "question": "Las palabras 'ELOGIAR' y 'VILIPENDIAR' tienen significados que son:",
+    "question": "TELA es a SASTRE como MADERA es a...",
+    "options": ["Bosque", "Mueble", "Carpintero", "Martillo"],
+    "correct_answer": 2,
+    "explanation": "La tela es la materia prima principal que trabaja el sastre, así como la madera es la materia prima del carpintero."
+  },
+  {
+    "id": 117,
+    "category": "math",
+    "question": "Resuelve la siguiente operación manteniendo la jerarquía matemática: 8 x 4 + 6 / 2",
+    "options": ["19", "32", "35", "40"],
+    "correct_answer": 2,
+    "explanation": "Primero multiplicación y división: (8 x 4) = 32; (6 / 2) = 3. Luego la suma: 32 + 3 = 35."
+  },
+  {
+    "id": 118,
+    "category": "sequences",
+    "question": "¿Qué número continúa la serie? 100, 99, 97, 94, 90, ___",
+    "options": ["84", "85", "86", "87"],
+    "correct_answer": 1,
+    "explanation": "La resta se incrementa en 1 cada vez: -1, -2, -3, -4. La siguiente resta es -5. 90 - 5 = 85."
+  },
+  {
+    "id": 119,
+    "category": "logic",
+    "question": "El hermano del padre de mi hijo es...",
+    "options": ["Mi hermano", "Mi tío", "Mi cuñado o yo mismo", "Mi hijo"],
+    "correct_answer": 2,
+    "explanation": "El 'padre de mi hijo' soy yo. El hermano de ese sujeto es, por lo tanto, mi propio hermano."
+  },
+  {
+    "id": 120,
+    "category": "proportions",
+    "question": "Una receta para 4 personas requiere 2 huevos. ¿Cuántos huevos necesitas si quieres cocinar la misma receta para 10 personas?",
+    "options": ["4", "5", "6", "8"],
+    "correct_answer": 1,
+    "explanation": "Si 4 personas necesitan 2 huevos, el ratio es de 0.5 huevos por persona. 10 personas * 0.5 = 5 huevos."
+  },
+  {
+    "id": 121,
+    "category": "vocabulary",
+    "question": "Las palabras 'FLEXIBLE' y 'RÍGIDO' tienen significados que son:",
     "options": ["Similares", "Opuestos", "Ni similares ni opuestos"],
     "correct_answer": 1,
-    "explanation": "Elogiar es hablar muy bien de alguien. Vilipendiar es despreciar o hablar mal de alguien, por lo que son antónimos."
+    "explanation": "Flexible indica que algo puede doblarse fácilmente, rígido indica lo contrario."
   },
   {
-    "id": 92,
+    "id": 122,
     "category": "math",
-    "question": "Un libro tiene 240 páginas. Si lees el 25% del libro en un día, ¿cuántas páginas te faltan por leer?",
-    "options": ["60", "120", "160", "180"],
-    "correct_answer": 3,
-    "explanation": "El 25% de 240 es 60 páginas leídas. Las páginas que faltan son 240 - 60 = 180."
-  },
-  {
-    "id": 93,
-    "category": "sequences",
-    "question": "¿Qué número continúa la serie? 100, 90, 70, 40, ___",
-    "options": ["0", "10", "20", "30"],
+    "question": "El salario de un empleado es de $2000. Primero recibe un aumento del 10%, y un año después, una rebaja del 10%. ¿Cuál es su salario final?",
+    "options": ["$1980", "$2000", "$2020", "$2200"],
     "correct_answer": 0,
-    "explanation": "Las restas van aumentando de 10 en 10: -10, -20, -30. La siguiente resta lógica es -40. 40 - 40 = 0."
+    "explanation": "El 10% de aumento lo sube a $2200. Luego, la rebaja es el 10% de 2200 ($220). 2200 - 220 = $1980."
   },
   {
-    "id": 94,
-    "category": "logic",
-    "question": "Si el Norte fuera el Sur y el Este fuera el Oeste, ¿hacia dónde apuntaría una brújula que originalmente señalaba al Noroeste?",
-    "options": ["Noroeste", "Noreste", "Suroeste", "Sureste"],
-    "correct_answer": 3,
-    "explanation": "Al invertirse los polos, el Norte se vuelve Sur y el Oeste se vuelve Este. Por tanto, el vector Noroeste se convierte en Sureste."
-  },
-  {
-    "id": 95,
-    "category": "proportions",
-    "question": "Una aleación contiene 2 partes de cobre y 3 partes de zinc. ¿Cuántos gramos de cobre hay en 100 gramos de la aleación?",
-    "options": ["20", "40", "60", "80"],
-    "correct_answer": 1,
-    "explanation": "En total hay 5 partes (2+3). Cada parte vale 20 gramos (100/5). El cobre tiene 2 partes, por lo que 2 * 20 = 40 gramos."
-  },
-  {
-    "id": 96,
-    "category": "vocabulary",
-    "question": "PÁGINA es a LIBRO como PANTALLA es a...",
-    "options": ["Teclado", "Monitor", "Computadora", "Ratón"],
-    "correct_answer": 2,
-    "explanation": "La página es el medio integral para visualizar el contenido de un libro, al igual que la pantalla es el medio para visualizar el de la computadora."
-  },
-  {
-    "id": 97,
-    "category": "math",
-    "question": "El promedio de 3 números es 15. Si dos de los números son 10 y 20, ¿cuál es el tercer número?",
-    "options": ["10", "15", "20", "25"],
-    "correct_answer": 1,
-    "explanation": "Para que el promedio de 3 números sea 15, su suma total debe ser 45 (15 * 3). Si ya tenemos 10 + 20 = 30, el tercer número debe ser 15."
-  },
-  {
-    "id": 98,
+    "id": 123,
     "category": "sequences",
-    "question": "¿Qué número continúa la serie? 144, 72, 36, 18, ___",
-    "options": ["6", "9", "12", "14"],
-    "correct_answer": 1,
-    "explanation": "Cada número se divide a la mitad (/2). 18 / 2 = 9."
+    "question": "¿Qué número continúa la serie? 2, 5, 10, 17, 26, ___",
+    "options": ["35", "36", "37", "38"],
+    "correct_answer": 2,
+    "explanation": "La diferencia aumenta en números impares consecutivos: +3, +5, +7, +9. La siguiente suma es +11. 26 + 11 = 37."
   },
   {
-    "id": 99,
+    "id": 124,
     "category": "logic",
-    "question": "Cinco corredores terminan una carrera. A llega antes que B, pero después de C. D llega antes que C. E llega último. ¿Quién ganó la carrera?",
-    "options": ["A", "B", "C", "D"],
-    "correct_answer": 3,
-    "explanation": "Ordenando de mayor a menor velocidad: D > C > A > B > E. Por lo tanto, D fue el primero en llegar."
+    "question": "Si yo corro más rápido que tú, y él corre más rápido que yo. ¿Quién es el más lento de los tres?",
+    "options": ["Yo", "Tú", "Él", "No se puede determinar"],
+    "correct_answer": 1,
+    "explanation": "La jerarquía de velocidad de mayor a menor es: Él > Yo > Tú."
   },
   {
-    "id": 100,
-    "category": "math",
-    "question": "Un jardín rectangular tiene 10 metros de largo y 5 metros de ancho. ¿Cuál es su perímetro total?",
-    "options": ["15 m", "30 m", "50 m", "100 m"],
+    "id": 125,
+    "category": "proportions",
+    "question": "Si 3 tuberías iguales llenan un tanque en 12 horas, ¿cuánto tardarán 4 tuberías idénticas en llenar el mismo tanque?",
+    "options": ["8 horas", "9 horas", "10 horas", "16 horas"],
     "correct_answer": 1,
-    "explanation": "El perímetro se calcula sumando todos los lados: 2 * (Largo + Ancho) = 2 * (10 + 5) = 2 * 15 = 30 metros."
+    "explanation": "El trabajo total es de 36 'horas-tubería' (3 * 12). Si tienes 4 tuberías, divides el trabajo: 36 / 4 = 9 horas."
   },
   {
     "id": 126,
