@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAssessment } from './useAssessment';
 import questionsData from './questions.json'; 
-import { BrainCircuit, Play, Clock, ChevronRight, ChevronLeft, CheckCircle2, XCircle, RotateCcw, Target, BarChart3, Home, Trophy, Activity } from 'lucide-react';
+import { BrainCircuit, Play, Clock, ChevronRight, ChevronLeft, CheckCircle2, XCircle, RotateCcw, Target, BarChart3, Home, Trophy, Activity, Eye, X } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const MAX_QUESTIONS = 5; // Cambiar a 50 para el test real
@@ -16,6 +16,9 @@ function App() {
 
   const [history, setHistory] = useState([]);
   const [currentView, setCurrentView] = useState('home'); // 'home' o 'dashboard'
+  
+  // NUEVO: Estado para manejar el modal de detalles
+  const [selectedRecord, setSelectedRecord] = useState(null);
 
   useEffect(() => {
     const savedHistory = JSON.parse(localStorage.getItem('wonderlic_history')) || [];
@@ -49,10 +52,12 @@ function App() {
         incorrect: questions.length - score,
         total: questions.length,
         percentage: Math.round((score / questions.length) * 100),
-        timeSpent: formatTime(timeSpentSeconds)
+        timeSpent: formatTime(timeSpentSeconds),
+        // NUEVO: Guardamos la fotografía exacta de este intento
+        testQuestions: questions,
+        userAnswers: answers
       };
       
-      // Guardamos todo el historial (sin límite de 10) para el gráfico
       const updatedHistory = [newRecord, ...history];
       setHistory(updatedHistory);
       localStorage.setItem('wonderlic_history', JSON.stringify(updatedHistory));
@@ -60,7 +65,6 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFinished]);
 
-  // Cálculos para el Dashboard
   const bestScore = history.length > 0 ? Math.max(...history.map(h => h.percentage)) : 0;
   const avgScore = history.length > 0 ? Math.round(history.reduce((acc, curr) => acc + curr.percentage, 0) / history.length) : 0;
   const chartData = [...history].reverse().map((h, i) => ({
@@ -72,8 +76,6 @@ function App() {
   if (!isActive && !isFinished && currentView === 'home') {
     return (
       <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6 font-sans">
-        
-        {/* Navegación Superior */}
         <div className="absolute top-6 right-6 flex gap-4">
           <button onClick={() => setCurrentView('dashboard')} className="flex items-center gap-2 bg-white text-indigo-600 px-4 py-2 rounded-xl shadow-sm border border-slate-200 hover:bg-indigo-50 transition-colors font-bold">
             <BarChart3 size={18} /> Métricas y Leaderboard
@@ -100,9 +102,67 @@ function App() {
   // VISTA 2: DASHBOARD Y METRICAS
   if (!isActive && !isFinished && currentView === 'dashboard') {
     return (
-      <div className="min-h-screen bg-slate-50 p-6 md:p-12 font-sans">
+      <div className="min-h-screen bg-slate-50 p-6 md:p-12 font-sans relative">
+        
+        {/* NUEVO: Modal de Detalles */}
+        {selectedRecord && (
+          <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-3xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+              
+              <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-white">
+                <div>
+                  <h3 className="text-2xl font-bold text-slate-800 flex items-center gap-2">
+                    <Target className="text-indigo-600" />
+                    Detalle de Evaluación
+                  </h3>
+                  <p className="text-sm text-slate-500 font-medium mt-1">
+                    Realizado el {selectedRecord.date} a las {selectedRecord.time} • Puntuación: {selectedRecord.score}/{selectedRecord.total}
+                  </p>
+                </div>
+                <button 
+                  onClick={() => setSelectedRecord(null)} 
+                  className="p-2 hover:bg-slate-100 rounded-full transition-colors text-slate-400 hover:text-slate-700"
+                >
+                  <X size={28} />
+                </button>
+              </div>
+              
+              <div className="p-6 overflow-y-auto flex-grow bg-slate-50">
+                {selectedRecord.testQuestions.map((q, idx) => {
+                  const isCorrect = selectedRecord.userAnswers[q.id] === q.correct_answer;
+                  return (
+                    <div key={q.id} className={`mb-6 p-6 border-l-8 rounded-r-2xl bg-white shadow-sm ${isCorrect ? 'border-emerald-500' : 'border-rose-500'}`}>
+                      <p className="font-bold text-slate-800 text-lg mb-4 flex items-start gap-2">
+                        <span className="text-slate-400">{idx + 1}.</span> {q.question}
+                      </p>
+                      <p className={`text-md mb-3 font-semibold flex items-center gap-2 ${isCorrect ? 'text-emerald-600' : 'text-rose-600'}`}>
+                        {isCorrect ? <CheckCircle2 size={18} /> : <XCircle size={18} />}
+                        Tu respuesta: {selectedRecord.userAnswers[q.id] !== undefined ? q.options[selectedRecord.userAnswers[q.id]] : 'Sin responder'}
+                      </p>
+                      
+                      <div className={`mt-4 p-4 rounded-xl border ${isCorrect ? 'bg-emerald-50/50 border-emerald-100' : 'bg-slate-50 border-slate-200'}`}>
+                        {!isCorrect && (
+                          <p className="text-sm text-slate-800 mb-2">
+                            <span className="font-bold text-rose-600 uppercase text-xs tracking-wider">Correcta:</span> {q.options[q.correct_answer]}
+                          </p>
+                        )}
+                        <p className="text-sm text-slate-700">
+                          <span className={`font-bold uppercase text-xs tracking-wider mr-2 ${isCorrect ? 'text-emerald-600' : 'text-slate-500'}`}>
+                            Explicación:
+                          </span> 
+                          {q.explanation}
+                        </p>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          </div>
+        )}
+        {/* Fin del Modal */}
+
         <div className="max-w-5xl mx-auto">
-          
           <div className="flex justify-between items-center mb-8">
             <h1 className="text-3xl font-extrabold text-slate-800 flex items-center gap-3">
               <Activity className="text-indigo-600" size={32} /> Tu Evolución
@@ -120,7 +180,6 @@ function App() {
             </div>
           ) : (
             <>
-              {/* Tarjetas KPI */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4">
                   <div className="bg-blue-100 p-4 rounded-xl text-blue-600"><Target size={28} /></div>
@@ -145,7 +204,6 @@ function App() {
                 </div>
               </div>
 
-              {/* Gráfico de Evolución */}
               <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 mb-8 h-80">
                 <h3 className="text-lg font-bold text-slate-700 mb-4 px-2">Tendencia de Aciertos (%)</h3>
                 <ResponsiveContainer width="100%" height="100%">
@@ -159,7 +217,6 @@ function App() {
                 </ResponsiveContainer>
               </div>
 
-              {/* Leaderboard Histórico */}
               <div className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
                 <div className="p-6 border-b border-slate-100">
                   <h3 className="text-lg font-bold text-slate-700">Leaderboard Personal</h3>
@@ -173,10 +230,11 @@ function App() {
                         <th className="p-4 font-semibold text-emerald-600">Correctas</th>
                         <th className="p-4 font-semibold text-rose-500">Incorrectas</th>
                         <th className="p-4 font-semibold">Tiempo Usado</th>
+                        <th className="p-4 font-semibold text-center">Detalle</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
-                      {history.map((record, idx) => (
+                      {history.map((record) => (
                         <tr key={record.id} className="hover:bg-slate-50 transition-colors">
                           <td className="p-4 text-slate-600 font-medium">
                             {record.date} <span className="text-slate-400 text-sm ml-2">{record.time}</span>
@@ -190,6 +248,19 @@ function App() {
                           <td className="p-4 font-bold text-rose-500">{record.incorrect}</td>
                           <td className="p-4 font-mono text-slate-600 flex items-center gap-2">
                             <Clock size={14} className="text-slate-400"/> {record.timeSpent}
+                          </td>
+                          <td className="p-4 text-center">
+                            {record.testQuestions ? (
+                              <button 
+                                onClick={() => setSelectedRecord(record)}
+                                className="p-2 bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white rounded-lg transition-colors inline-flex items-center justify-center"
+                                title="Ver detalle de respuestas"
+                              >
+                                <Eye size={18} />
+                              </button>
+                            ) : (
+                              <span className="text-xs text-slate-400 italic">No disp.</span>
+                            )}
                           </td>
                         </tr>
                       ))}
@@ -205,7 +276,21 @@ function App() {
   }
 
   // VISTA 3: RESULTADOS DEL TEST
-  <div className="p-8 max-h-[50vh] overflow-y-auto bg-slate-50">
+  if (isFinished) {
+    const score = calculateScore();
+    const percentage = Math.round((score / questions.length) * 100);
+    return (
+      <div className="min-h-screen bg-slate-50 p-4 md:p-8 font-sans flex items-center justify-center">
+        <div className="max-w-3xl w-full bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100">
+          <div className="bg-indigo-600 p-12 text-center text-white">
+            <h2 className="text-3xl font-bold mb-2">¡Test Finalizado!</h2>
+            <div className="text-7xl font-extrabold my-6 drop-shadow-md">{percentage}%</div>
+            <p className="text-indigo-100 text-xl font-medium flex items-center justify-center gap-2">
+              <CheckCircle2 /> {score} de {questions.length} correctas
+            </p>
+          </div>
+          
+          <div className="p-8 max-h-[50vh] overflow-y-auto bg-slate-50">
             {questions.map((q, idx) => {
               const isCorrect = answers[q.id] === q.correct_answer;
               return (
@@ -218,7 +303,6 @@ function App() {
                     Tu respuesta: {answers[q.id] !== undefined ? q.options[answers[q.id]] : 'Sin responder'}
                   </p>
                   
-                  {/* --- NUEVO BLOQUE: Explicación siempre visible --- */}
                   <div className={`mt-4 p-4 rounded-xl border ${isCorrect ? 'bg-emerald-50/50 border-emerald-100' : 'bg-slate-50 border-slate-200'}`}>
                     {!isCorrect && (
                       <p className="text-sm text-slate-800 mb-2">
@@ -232,15 +316,25 @@ function App() {
                       {q.explanation}
                     </p>
                   </div>
-                  {/* ----------------------------------------------- */}
-
                 </div>
               )
             })}
           </div>
 
+          <div className="p-8 bg-white border-t flex justify-center gap-4 flex-col md:flex-row">
+            <button onClick={() => window.location.reload()} className="flex items-center justify-center gap-2 bg-white border-2 border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-indigo-200 hover:text-indigo-600 font-bold py-3 px-8 rounded-xl transition-all shadow-sm text-lg w-full md:w-auto">
+              <RotateCcw size={20} /> Reintentar
+            </button>
+            <button onClick={() => { startTest(); finishTest(); setCurrentView('dashboard'); window.location.reload() }} className="flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-xl transition-all shadow-sm text-lg w-full md:w-auto">
+              <BarChart3 size={20} /> Ver Métricas
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // VISTA 4: EVALUACIÓN (EL TEST EN SÍ)
-  // (Mantiene exactamente el mismo código visual hermoso que ya teníamos para responder)
   return (
     <div className="min-h-screen bg-slate-50 p-4 pt-8 md:pt-12 font-sans flex justify-center">
       <div className="max-w-3xl w-full bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 flex flex-col">
